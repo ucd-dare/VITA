@@ -1,137 +1,148 @@
+/* ---------- General Typography ---------- */
 body {
   font-family: 'Noto Sans', sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
 }
 
+.highlight-box {
+  background: linear-gradient(90deg, #e0ecff, #f5f9ff);
+  color: #1a1a1a;
+  padding: 1rem 1.25rem;
+  margin: 2rem auto;
+  border-left: 4px solid #276cda;
+  font-size: 1.15rem;
+  font-weight: 500;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+}
 
+.highlight-box .icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  color: #276cda;
+}
+
+.highlight-bold {
+  font-weight: 600;
+  background: linear-gradient(transparent 70%, #d9e6ff 70%);
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
+/* Optional: Use variants */
+.highlight-box.alt {
+  background-color: #fdf7f9;
+  border-left-color: #ff3860;
+}
+.highlight-box.alt .icon {
+  color: #ff3860;
+}
+
+/* ---------- Footer ---------- */
 .footer .icon-link {
-    font-size: 25px;
-    color: #000;
+  font-size: 25px;
+  color: #000;
 }
-
 .link-block a {
-    margin-top: 5px;
-    margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
+/* ---------- Fonts & Headings ---------- */
 .dnerf {
   font-variant: small-caps;
 }
-
-
 .teaser .hero-body {
   padding-top: 0;
   padding-bottom: 3rem;
 }
-
 .teaser {
   font-family: 'Google Sans', sans-serif;
 }
-
-
 .publication-title {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
 }
-
-.publication-banner {
-  max-height: parent;
-
-}
-
-.publication-banner video {
-  position: relative;
-  left: auto;
-  top: auto;
-  transform: none;
-  object-fit: fit;
-}
-
-.publication-header .hero-body {
-}
-
-.publication-title {
-    font-family: 'Google Sans', sans-serif;
-}
-
 .publication-authors {
-    font-family: 'Google Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.1rem;
 }
-
-.publication-venue {
-    color: #555;
-    width: fit-content;
-    font-weight: bold;
-}
-
-.publication-awards {
-    color: #ff3860;
-    width: fit-content;
-    font-weight: bolder;
-}
-
-.publication-authors {
-}
-
 .publication-authors a {
-   color: hsl(204, 86%, 53%) !important;
+  color: hsl(204, 86%, 53%) !important;
+  transition: all 0.2s ease;
 }
-
 .publication-authors a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+  color: #205dcb !important;
 }
 
+/* ---------- Author Block Layout ---------- */
 .author-block {
   display: inline-block;
+  margin: 0 3px;
 }
 
-.publication-banner img {
+/* ---------- Publication Banner + Video ---------- */
+.publication-banner {
+  max-height: inherit;
 }
-
-.publication-authors {
-  /*color: #4286f4;*/
+.publication-banner video {
+  object-fit: contain;
 }
-
 .publication-video {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%;
-
-    overflow: hidden;
-    border-radius: 10px !important;
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  border-radius: 10px;
 }
-
 .publication-video iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.publication-body img {
+/* ---------- Section Headings ---------- */
+.section h2.title {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
 }
 
+/* ---------- Results Carousel (Unused?) ---------- */
 .results-carousel {
   overflow: hidden;
 }
-
 .results-carousel .item {
   margin: 5px;
-  overflow: hidden;
   padding: 20px;
   font-size: 0;
 }
-
 .results-carousel video {
   margin: 5px;
 }
-
 .slider-pagination .slider-page {
   background: #000000;
 }
 
-.eql-cntrb { 
+/* ---------- Misc Tweaks ---------- */
+.eql-cntrb {
   font-size: smaller;
 }
-
-
-
+.publication-venue {
+  color: #555;
+  width: fit-content;
+  font-weight: bold;
+}
+.publication-awards {
+  color: #ff3860;
+  font-weight: bolder;
+}

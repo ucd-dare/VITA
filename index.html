@@ -16,7 +16,7 @@
 
 
     <meta name="twitter:title" content="VITA: Vision-To-Action Flow Matching Policy">
-    <meta name="twitter:description" content="VITA: Vision-To-Action Flow Matching Policy">
+    <meta name="twitter:description" content="Flowing from Vision to Action">
     <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
     <meta name="twitter:image" content="static/images/top.png">
     <meta name="twitter:card" content="summary_large_image">
@@ -159,6 +159,13 @@
     </section>
     -->
 
+    <div class="highlight-box">
+        <span class="icon"><i class="fas fa-bolt"></i></span>
+        VITA directly flows from latent images to latent actions—without sampling from Gaussian noise or relying on conditioning modules.
+    </div>
+
+
+
     <!-- Abstract -->
     <section class="section hero is-light">
         <div class="container is-max-desktop">
@@ -171,16 +178,16 @@
                             into latent actions via flow matching for visuomotor control. Traditional flow matching and diffusion
                             policies face a fundamental inefficiency: they sample from standard source distributions (e.g.,
                             Gaussian noise) and then require additional conditioning mechanisms, such as cross-attention, to
-                            condition action generation on visual information, incurring time and space overheads. <b>We propose
+                            condition action generation on visual information, incurring time and space overheads. <span class="highlight-bold">We propose
                             VITA, a novel paradigm that treats latent images as the source of the flow, and learns an inherent
                             mapping from vision to action. VITA eliminates the need for separate conditioning modules, while
-                            preserving the generative modeling capabilities. </b> We implement VITA as simple MLP layers, and evaluate VITA on
+                            preserving the generative modeling capabilities. </span> We implement VITA as simple MLP layers, and evaluate VITA on
                             challenging bi-manual manipulation tasks on the ALOHA platform, including 5 simulation and 2
                             real-world tasks. Despite its simplicity, MLP-only VITA outperforms or matches state-of-the-art
                             generative policies, while reducing inference latency by 50% to 130% compared to conventional
                             flow matching policies requiring different conditioning mechanisms or complex architectures. To our
-                            knowledge, VITA is the first <b>MLP-only flow matching policy capable of solving complex bi-manual
-                            manipulation tasks like those in ALOHA benchmarks.</b>
+                            knowledge, VITA is the first <span class="highlight-bold">MLP-only flow matching policy capable of solving complex bi-manual
+                            manipulation tasks like those in ALOHA benchmarks.</span>
                         </p>
                     </div>
                 </div>
