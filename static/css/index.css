@@ -1,148 +1,298 @@
-/* ---------- General Typography ---------- */
-body {
-  font-family: 'Noto Sans', sans-serif;
-  line-height: 1.6;
-  color: #1a1a1a;
+.publication-title {
+    font-family: 'Inter', 'Google Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 2.5rem !important;
+    background: linear-gradient(135deg, 
+        #1e293b 0%, 
+        #6366f1 50%, 
+        #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    position: relative;
+}
+
+.publication-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+    animation: title-underline 3s ease-in-out infinite;
+}
+
+@keyframes title-underline {
+    0%, 100% {
+        width: 60px;
+        opacity: 0.7;
+    }
+    50% {
+        width: 120px;
+        opacity: 1;
+    }
 }
 
 .highlight-box {
-  background: linear-gradient(90deg, #e0ecff, #f5f9ff);
-  color: #1a1a1a;
-  padding: 1rem 1.25rem;
-  margin: 2rem auto;
-  border-left: 4px solid #276cda;
-  font-size: 1.15rem;
-  font-weight: 500;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
-  max-width: 800px;
-  display: flex;
-  align-items: center;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.08) 0%, 
+        rgba(168, 85, 247, 0.08) 50%, 
+        rgba(236, 72, 153, 0.08) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(99, 102, 241, 0.2) !important;
+    border-left: 4px solid #6366f1 !important;
+    color: #1e293b !important;
+    padding: 1.5rem 2rem !important;
+    margin: 2.5rem auto !important;
+    font-size: 1.15rem !important;
+    font-weight: 500 !important;
+    border-radius: 16px !important;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    max-width: 850px !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+}
+
+.highlight-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 16px 48px rgba(99, 102, 241, 0.15),
+        0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.highlight-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.8s ease;
+    pointer-events: none;
+}
+
+.highlight-box:hover::before {
+    left: 100%;
 }
 
 .highlight-box .icon {
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
-  color: #276cda;
+    margin-right: 1rem !important;
+    font-size: 1.5rem !important;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
+        transform: scale(1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+        transform: scale(1.05);
+    }
 }
 
 .highlight-bold {
-  font-weight: 600;
-  background: linear-gradient(transparent 70%, #d9e6ff 70%);
-  border-radius: 4px;
-  padding: 0 2px;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    display: inline !important;
 }
 
-/* Optional: Use variants */
-.highlight-box.alt {
-  background-color: #fdf7f9;
-  border-left-color: #ff3860;
-}
-.highlight-box.alt .icon {
-  color: #ff3860;
+.highlight-bold:hover {
+    filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
 }
 
-/* ---------- Footer ---------- */
-.footer .icon-link {
-  font-size: 25px;
-  color: #000;
-}
-.link-block a {
-  margin-top: 5px;
-  margin-bottom: 5px;
+/* Flow Animation Elements - Add to existing sections */
+.flow-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    margin: 2rem auto;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.05) 0%, 
+        rgba(168, 85, 247, 0.05) 100%);
 }
 
-/* ---------- Fonts & Headings ---------- */
-.dnerf {
-  font-variant: small-caps;
+.flow-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: flow-animation 4s linear infinite;
 }
-.teaser .hero-body {
-  padding-top: 0;
-  padding-bottom: 3rem;
+
+.flow-particle:nth-child(1) { top: 20%; animation-delay: 0s; }
+.flow-particle:nth-child(2) { top: 40%; animation-delay: 0.8s; }
+.flow-particle:nth-child(3) { top: 60%; animation-delay: 1.6s; }
+.flow-particle:nth-child(4) { top: 80%; animation-delay: 2.4s; }
+.flow-particle:nth-child(5) { top: 35%; animation-delay: 3.2s; }
+
+@keyframes flow-animation {
+    0% {
+        left: -10px;
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    10% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    90% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+        transform: scale(0.5);
+    }
 }
-.teaser {
-  font-family: 'Google Sans', sans-serif;
+
+/* Floating Flow Orbs - Add these to any section */
+.flow-orb {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.8), rgba(99, 102, 241, 0.2));
+    border-radius: 50%;
+    animation: float-flow 6s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    pointer-events: none;
 }
-.publication-title {
-  font-family: 'Google Sans', sans-serif;
-  font-weight: 700;
-  font-size: 2.5rem;
+
+.flow-orb:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
 }
-.publication-authors {
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1.1rem;
+
+.flow-orb:nth-child(2) {
+    top: 70%;
+    right: 15%;
+    animation-delay: 2s;
 }
-.publication-authors a {
-  color: hsl(204, 86%, 53%) !important;
-  transition: all 0.2s ease;
+
+.flow-orb:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
 }
+
+@keyframes float-flow {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.6;
+    }
+    33% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 0.8;
+    }
+    66% {
+        transform: translateY(10px) scale(0.9);
+        opacity: 0.7;
+    }
+}
+
+/* Section with Flow Background - Add this class to any section */
+.section-with-flow {
+    position: relative;
+    overflow: hidden;
+}
+
+.section-with-flow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 70%, rgba(236, 72, 153, 0.03) 0%, transparent 50%);
+    animation: flow-background 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes flow-background {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.1) rotate(180deg);
+        opacity: 0.8;
+    }
+}
+
+/* Flow Connection Lines - Add between sections */
+.flow-connection {
+    position: relative;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, 
+        transparent,
+        rgba(99, 102, 241, 0.4),
+        transparent
+    );
+    margin: 2rem auto;
+    animation: flow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes flow-pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scaleY(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scaleY(1.2);
+    }
+}
+
+.title.is-3 {
+    background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
 .publication-authors a:hover {
-  text-decoration: underline;
-  color: #205dcb !important;
-}
-
-/* ---------- Author Block Layout ---------- */
-.author-block {
-  display: inline-block;
-  margin: 0 3px;
-}
-
-/* ---------- Publication Banner + Video ---------- */
-.publication-banner {
-  max-height: inherit;
-}
-.publication-banner video {
-  object-fit: contain;
-}
-.publication-video {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%;
-  overflow: hidden;
-  border-radius: 10px;
-}
-.publication-video iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* ---------- Section Headings ---------- */
-.section h2.title {
-  font-family: 'Google Sans', sans-serif;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-}
-
-/* ---------- Results Carousel (Unused?) ---------- */
-.results-carousel {
-  overflow: hidden;
-}
-.results-carousel .item {
-  margin: 5px;
-  padding: 20px;
-  font-size: 0;
-}
-.results-carousel video {
-  margin: 5px;
-}
-.slider-pagination .slider-page {
-  background: #000000;
-}
-
-/* ---------- Misc Tweaks ---------- */
-.eql-cntrb {
-  font-size: smaller;
-}
-.publication-venue {
-  color: #555;
-  width: fit-content;
-  font-weight: bold;
-}
-.publication-awards {
-  color: #ff3860;
-  font-weight: bolder;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
 }
