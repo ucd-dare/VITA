@@ -126,14 +126,14 @@
     box-shadow: 
         0 8px 32px rgba(99, 102, 241, 0.15),
         0 2px 8px rgba(0, 0, 0, 0.08) !important;
-    max-width: 850px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    max-width: 1000px !important;
+    display: block !important;
     text-align: center !important;
     overflow: hidden !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     position: relative;
+    white-space: normal !important;
+    line-height: 1.5 !important;
 }
 
 .highlight-box:hover {
@@ -171,7 +171,7 @@
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     animation: pulse-glow 2s ease-in-out infinite;
-    flex-shrink: 0;
+    display: inline !important;
 }
 
 @keyframes pulse-glow {
@@ -191,44 +191,17 @@
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    position: relative;
-    transition: all 0.3s ease !important;
-    display: inline-block;
-    padding: 0.1rem 0.3rem !important;
-    border-radius: 6px !important;
     background-size: 200% 100%;
     animation: keyword-shimmer 3s ease-in-out infinite;
-}
-
-.cool-keyword::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(99, 102, 241, 0.1), 
-        rgba(168, 85, 247, 0.1), 
-        rgba(236, 72, 153, 0.1)
-    );
-    border-radius: 6px;
-    z-index: -1;
-    transition: all 0.3s ease;
+    display: inline !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
 }
 
 .cool-keyword:hover {
-    transform: translateY(-1px) scale(1.05);
-    filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
-}
-
-.cool-keyword:hover::before {
-    background: linear-gradient(135deg, 
-        rgba(99, 102, 241, 0.2), 
-        rgba(168, 85, 247, 0.2), 
-        rgba(236, 72, 153, 0.2)
-    );
-    transform: scale(1.1);
+    filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
 }
 
 @keyframes keyword-shimmer {
