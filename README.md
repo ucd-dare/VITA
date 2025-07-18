@@ -1,6 +1,6 @@
 # 🌊 VITA: Vision-to-Action Flow Matching Policy
 
-Coming soon....
+Coming soon........
 
 <p align="center">
   <img src="https://img.shields.io/badge/arXiv-2507.13231-b31b1b.svg" alt="arXiv">
