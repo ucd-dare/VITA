@@ -289,21 +289,21 @@
         /* VITA Animation Styles */
         .vita-animation-container {
             width: 100%;
-            margin: 2rem auto;
+            margin: 1rem auto;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 16px;
-            padding: 1rem;
+            padding: 0.3rem;
             border: 1px solid rgba(99, 102, 241, 0.1);
         }
 
         .vita-stage {
             width: 100%;
-            max-width: 1000px;
-            min-width: 700px;
-            height: 350px;
+            max-width: 900px;
+            min-width: 600px;
+            height: 240px;
             position: relative;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
@@ -314,23 +314,23 @@
 
         .vita-title {
             position: absolute;
-            top: 10px;
+            top: 6px;
             left: 50%;
             transform: translateX(-50%);
             color: #1e293b;
-            font-size: clamp(14px, 2vw, 18px);
-            font-weight: 600;
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 700;
             text-align: center;
             z-index: 100;
         }
 
         .vita-subtitle {
             position: absolute;
-            top: 32px;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
             color: #64748b;
-            font-size: clamp(8px, 1vw, 10px);
+            font-size: clamp(12px, 1.5vw, 16px);
             font-weight: 500;
             text-align: center;
             z-index: 100;
@@ -338,15 +338,15 @@
 
         .vita-pipeline {
             position: absolute;
-            top: 60px;
+            top: 50px;
             left: 0;
             right: 0;
-            height: 200px;
+            height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 2%;
-            gap: 1%;
+            padding: 0 0.5%;
+            gap: 0.1%;
         }
 
         .vita-section {
@@ -359,12 +359,12 @@
         }
 
         .vita-image-section {
-            width: 12%;
-            min-width: 70px;
+            width: 16%;
+            min-width: 80px;
         }
 
         .vita-latent-image-section {
-            width: 10%;
+            width: 12%;
             min-width: 60px;
             opacity: 0;
             transform: scale(0.8);
@@ -376,8 +376,8 @@
         }
 
         .vita-flow-section {
-            width: 35%;
-            min-width: 250px;
+            width: 28%;
+            min-width: 180px;
             opacity: 0;
             transform: scale(0.8);
         }
@@ -388,7 +388,7 @@
         }
 
         .vita-latent-action-section {
-            width: 10%;
+            width: 12%;
             min-width: 60px;
             opacity: 0;
             transform: scale(0.8);
@@ -400,8 +400,8 @@
         }
 
         .vita-action-section {
-            width: 18%;
-            min-width: 100px;
+            width: 16%;
+            min-width: 80px;
             opacity: 0;
             transform: scale(0.8);
         }
@@ -412,8 +412,8 @@
         }
 
         .vita-robot-image {
-            width: 60px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             border-radius: 8px;
             background: #f8fafc;
             border: 2px solid rgba(99, 102, 241, 0.3);
@@ -437,7 +437,7 @@
 
         .vita-latent-container {
             width: 50px;
-            height: 100px;
+            height: 70px;
             border-radius: 8px;
             background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
             border: 2px solid rgba(59, 130, 246, 0.4);
@@ -447,7 +447,7 @@
 
         .vita-flow-pipeline {
             width: 100%;
-            height: 100px;
+            height: 70px;
             position: relative;
             border-radius: 8px;
             background: linear-gradient(90deg, 
@@ -490,7 +490,7 @@
 
         .vita-latent-action-container {
             width: 50px;
-            height: 100px;
+            height: 70px;
             border-radius: 8px;
             background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
             border: 2px solid rgba(16, 185, 129, 0.4);
@@ -499,8 +499,8 @@
         }
 
         .vita-action-display {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(180deg, rgba(245, 101, 101, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
             border: 2px solid rgba(245, 101, 101, 0.3);
             border-radius: 8px;
@@ -541,8 +541,8 @@
 
         .vita-label {
             color: #475569;
-            font-size: clamp(7px, 0.8vw, 9px);
-            font-weight: 600;
+            font-size: clamp(11px, 1.2vw, 14px);
+            font-weight: 700;
             margin-top: 6px;
             text-align: center;
             opacity: 0.9;
@@ -552,7 +552,7 @@
 
         .vita-arrow {
             position: absolute;
-            height: 2px;
+            height: 10px;
             background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), transparent);
             top: 50%;
             transform: translateY(-50%);
@@ -599,15 +599,15 @@
 
         .vita-control-button {
             position: absolute;
-            bottom: 8px;
+            bottom: 6px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 9px;
+            padding: 10px 20px;
+            border-radius: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -621,12 +621,12 @@
 
         .vita-phase-indicator {
             position: absolute;
-            bottom: 28px;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
             color: #64748b;
-            font-size: 8px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
             text-align: center;
         }
 
@@ -814,8 +814,8 @@
                                 </div>
                             </div>
 
-                            <div class="vita-phase-indicator" id="vitaPhaseText">Ready to start VITA process</div>
-                            <button class="vita-control-button" onclick="startVitaAnimation()">Start VITA Process</button>
+                            <div class="vita-phase-indicator" id="vitaPhaseText">Ready to start VITA flow</div>
+                            <button class="vita-control-button" onclick="startVitaAnimation()">Restart</button>
                         </div>
                     </div>
                 </div>
@@ -1168,7 +1168,7 @@
                 const centerY = pipelineRect.top + pipelineRect.height / 2 - stageRect.top;
                 const pipelineWidth = endX - startX;
                 
-                // 3-step flow matching animation (reduced from 4)
+                // 3-step flow matching animation
                 const steps = 3;
                 let currentStep = 0;
                 
@@ -1180,15 +1180,17 @@
                     
                     const progress = currentStep / (steps - 1);
                     
-                    vitaAllParticles.forEach((particle, i) => {
+                                                vitaAllParticles.forEach((particle, i) => {
                         if (particle.classList.contains('vita-latent-image-particle') || 
                             particle.classList.contains('vita-flow-particle')) {
                             
-                            // Position along pipeline
-                            const particleProgress = progress + (i / vitaAllParticles.length) * 0.1;
+                            // Position along pipeline with random distribution
+                            const particleProgress = progress + (i / vitaAllParticles.length) * 0.15;
                             const clampedProgress = Math.min(Math.max(particleProgress, 0), 1);
                             const x = startX + pipelineWidth * clampedProgress;
-                            const y = centerY + (Math.random() - 0.5) * 30;
+                            
+                            // Random Y position instead of vertical line
+                            const randomY = centerY + (Math.random() - 0.5) * 50;
                             
                             // Color interpolation from blue to green
                             const blueAmount = 1 - clampedProgress;
@@ -1199,7 +1201,7 @@
                             const b = Math.round(250 * blueAmount + 153 * greenAmount);
                             
                             particle.style.left = x + 'px';
-                            particle.style.top = y + 'px';
+                            particle.style.top = randomY + 'px';
                             particle.style.background = `radial-gradient(circle, rgb(${r}, ${g}, ${b}), rgb(${Math.round(r*0.8)}, ${Math.round(g*0.8)}, ${Math.round(b*0.8)}))`;
                             particle.style.boxShadow = `0 0 4px rgba(${r}, ${g}, ${b}, 0.8)`;
                             particle.className = 'vita-particle vita-flow-particle';
@@ -1270,12 +1272,12 @@
             vitaClearAll();
             
             // Step 1: Create vision particles
-            vitaUpdatePhase('Encoding camera image to particles');
+            vitaUpdatePhase('Encoding camera image');
             vitaCreateVisionParticles();
             await new Promise(resolve => setTimeout(resolve, 500));
             
             // Step 2: Show latent image section and move particles
-            vitaUpdatePhase('Flowing to latent image space');
+            vitaUpdatePhase('Image as the source of flow');
             vitaShowSection('vitaLatentImageSection');
             await new Promise(resolve => setTimeout(resolve, 200));
             
@@ -1290,7 +1292,7 @@
             await new Promise(resolve => setTimeout(resolve, 300));
             
             // Step 3: Show flow matching pipeline
-            vitaUpdatePhase('Flow matching: gradual transformation');
+            vitaUpdatePhase('Flowing from image to action space...');
             vitaShowSection('vitaFlowSection');
             await new Promise(resolve => setTimeout(resolve, 200));
             
@@ -1330,8 +1332,41 @@
             vitaCreateActionSequence();
             await new Promise(resolve => setTimeout(resolve, 1500));
             
+            vitaUpdatePhase('Actions generated!');
+            document.querySelector('.vita-control-button').textContent = 'Restart';ateFlowMatching();
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 4: Show latent action section and move particles
+            vitaUpdatePhase('Reaching latent action space');
+            vitaShowSection('vitaLatentActionSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-flow-section'),
+                document.querySelector('.vita-latent-action-section')
+            );
+            await vitaMoveParticlesToContainer(
+                document.getElementById('vitaLatentActions'), 
+                'vita-latent-action-particle'
+            );
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 5: Show action section and decode
+            vitaUpdatePhase('Decoding to action sequence');
+            vitaShowSection('vitaActionSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-latent-action-section'),
+                document.querySelector('.vita-action-section')
+            );
+            
+            vitaClearLatentActionParticles();
+            vitaCreateActionSequence();
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
             vitaUpdatePhase('VITA process complete!');
-            document.querySelector('.vita-control-button').textContent = 'Restart VITA Process';
+            document.querySelector('.vita-control-button').textContent = 'Restart';
             vitaIsAnimating = false;
         }
 
