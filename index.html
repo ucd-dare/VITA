@@ -42,6 +42,636 @@
     <script src="static/js/bulma-carousel.min.js"></script>
     <script src="static/js/bulma-slider.min.js"></script>
     <script src="static/js/index.js"></script>
+
+    <style>
+        .publication-title {
+            font-family: 'Inter', 'Google Sans', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 2.5rem !important;
+            background: linear-gradient(135deg, 
+                #1e293b 0%, 
+                #6366f1 50%, 
+                #8b5cf6 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            position: relative;
+            opacity: 0;
+            animation: title-reveal 0.8s ease-out 1.2s forwards;
+            margin-bottom: 1rem !important;
+        }
+
+        .publication-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 2px;
+            animation: title-underline-grow 0.4s ease-out 2s forwards;
+        }
+
+        .publication-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(ellipse 100px 30px at 20% 30%, rgba(99, 102, 241, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 120px 25px at 60% 50%, rgba(168, 85, 247, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 80px 35px at 80% 20%, rgba(236, 72, 153, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 90px 20px at 40% 70%, rgba(99, 102, 241, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 110px 40px at 10% 60%, rgba(168, 85, 247, 0.4) 0%, transparent 70%),
+                linear-gradient(45deg, 
+                    rgba(99, 102, 241, 0.15) 0%, 
+                    rgba(168, 85, 247, 0.15) 50%, 
+                    rgba(236, 72, 153, 0.15) 100%);
+            background-size: 200px 100px, 180px 80px, 160px 90px, 190px 70px, 210px 110px, 400px 200px;
+            animation: water-flow-to-title 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0s forwards;
+            opacity: 1;
+            pointer-events: none;
+            z-index: 5;
+            border-radius: 50%;
+        }
+
+        @keyframes water-flow-to-title {
+            0% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(3) rotate(0deg);
+                background-size: 300px 150px, 280px 130px, 260px 140px, 290px 120px, 310px 160px, 600px 300px;
+                filter: blur(2px);
+            }
+            25% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(2.2) rotate(90deg);
+                background-size: 240px 120px, 220px 100px, 200px 110px, 230px 90px, 250px 130px, 500px 250px;
+                filter: blur(1.5px);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+                background-size: 180px 90px, 160px 70px, 140px 80px, 170px 60px, 190px 100px, 400px 200px;
+                filter: blur(1px);
+            }
+            75% {
+                opacity: 0.4;
+                transform: translate(-50%, -50%) scale(0.8) rotate(270deg);
+                background-size: 120px 60px, 100px 40px, 80px 50px, 110px 30px, 130px 70px, 300px 150px;
+                filter: blur(0.5px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(360deg);
+                background-size: 60px 30px, 50px 20px, 40px 25px, 55px 15px, 65px 35px, 200px 100px;
+                filter: blur(0px);
+            }
+        }
+
+        @keyframes title-reveal {
+            0% {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes title-underline-grow {
+            0% {
+                width: 0;
+                opacity: 0;
+            }
+            100% {
+                width: 120px;
+                opacity: 1;
+            }
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.12) 0%, 
+                rgba(168, 85, 247, 0.12) 50%, 
+                rgba(236, 72, 153, 0.12) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+            border-left: 4px solid #6366f1 !important;
+            color: #1e293b !important;
+            padding: 1.5rem 2rem !important;
+            margin: 1.5rem auto !important;
+            font-size: 1.15rem !important;
+            font-weight: 500 !important;
+            border-radius: 16px !important;
+            box-shadow: 
+                0 8px 32px rgba(99, 102, 241, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.08) !important;
+            max-width: 1000px !important;
+            display: block !important;
+            text-align: center !important;
+            overflow: hidden !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            white-space: normal !important;
+            line-height: 1.5 !important;
+        }
+
+        .highlight-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 16px 48px rgba(99, 102, 241, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.8s ease;
+            pointer-events: none;
+        }
+
+        .highlight-box:hover::before {
+            left: 100%;
+        }
+
+        .highlight-box .icon {
+            margin-right: 1rem !important;
+            font-size: 1.5rem !important;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            animation: pulse-glow 2s ease-in-out infinite;
+            display: inline !important;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
+                transform: scale(1);
+            }
+            50% { 
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+                transform: scale(1.05);
+            }
+        }
+
+        .cool-keyword {
+            font-weight: 700 !important;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            background-size: 200% 100%;
+            animation: keyword-shimmer 3s ease-in-out infinite;
+            display: inline !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+
+        .cool-keyword:hover {
+            filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
+        }
+
+        @keyframes keyword-shimmer {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .highlight-bold {
+            font-weight: 600 !important;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            transition: all 0.3s ease !important;
+            position: relative;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            display: inline !important;
+        }
+
+        .highlight-bold:hover {
+            filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
+        }
+
+        .title.is-3 {
+            background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        /* VITA Animation Styles */
+        .vita-animation-container {
+            width: 100%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .vita-stage {
+            width: 100%;
+            max-width: 1000px;
+            min-width: 700px;
+            height: 350px;
+            position: relative;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .vita-title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #1e293b;
+            font-size: clamp(14px, 2vw, 18px);
+            font-weight: 600;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .vita-subtitle {
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #64748b;
+            font-size: clamp(8px, 1vw, 10px);
+            font-weight: 500;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .vita-pipeline {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 2%;
+            gap: 1%;
+        }
+
+        .vita-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .vita-image-section {
+            width: 12%;
+            min-width: 70px;
+        }
+
+        .vita-latent-image-section {
+            width: 10%;
+            min-width: 60px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .vita-latent-image-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .vita-flow-section {
+            width: 35%;
+            min-width: 250px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .vita-flow-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .vita-latent-action-section {
+            width: 10%;
+            min-width: 60px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .vita-latent-action-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .vita-action-section {
+            width: 18%;
+            min-width: 100px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .vita-action-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .vita-robot-image {
+            width: 60px;
+            height: 100px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .vita-robot-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .vita-robot-image:hover {
+            transform: scale(1.05);
+        }
+
+        .vita-latent-container {
+            width: 50px;
+            height: 100px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vita-flow-pipeline {
+            width: 100%;
+            height: 100px;
+            position: relative;
+            border-radius: 8px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.08) 0%, 
+                rgba(139, 92, 246, 0.08) 33%,
+                rgba(34, 197, 94, 0.08) 66%,
+                rgba(16, 185, 129, 0.08) 100%);
+            border-top: 2px solid rgba(139, 92, 246, 0.4);
+            border-bottom: 2px solid rgba(139, 92, 246, 0.4);
+            overflow: hidden;
+        }
+
+        .vita-flow-pipeline::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.6) 0%, 
+                rgba(139, 92, 246, 0.8) 33%,
+                rgba(34, 197, 94, 0.8) 66%,
+                rgba(16, 185, 129, 0.6) 100%);
+        }
+
+        .vita-flow-pipeline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.6) 0%, 
+                rgba(139, 92, 246, 0.8) 33%,
+                rgba(34, 197, 94, 0.8) 66%,
+                rgba(16, 185, 129, 0.6) 100%);
+        }
+
+        .vita-latent-action-container {
+            width: 50px;
+            height: 100px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vita-action-display {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(180deg, rgba(245, 101, 101, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 2px solid rgba(245, 101, 101, 0.3);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vita-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .vita-vision-particle {
+            background: radial-gradient(circle, #60a5fa, #3b82f6);
+            box-shadow: 0 0 4px rgba(96, 165, 250, 0.8);
+        }
+
+        .vita-latent-image-particle {
+            background: radial-gradient(circle, #60a5fa, #3b82f6);
+            box-shadow: 0 0 4px rgba(96, 165, 250, 0.8);
+        }
+
+        .vita-flow-particle {
+            background: radial-gradient(circle, #60a5fa, #3b82f6);
+            box-shadow: 0 0 4px rgba(96, 165, 250, 0.8);
+            transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .vita-latent-action-particle {
+            background: radial-gradient(circle, #34d399, #10b981);
+            box-shadow: 0 0 4px rgba(52, 211, 153, 0.8);
+        }
+
+        .vita-label {
+            color: #475569;
+            font-size: clamp(7px, 0.8vw, 9px);
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+            opacity: 0.9;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        .vita-arrow {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), transparent);
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .vita-arrow::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: -1px;
+            width: 0;
+            height: 0;
+            border-left: 3px solid rgba(99, 102, 241, 0.6);
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+        }
+
+        .vita-action-path {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .vita-action-curve {
+            stroke: #f59e0b;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 0;
+            opacity: 0;
+            filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.6));
+        }
+
+        .vita-action-point {
+            fill: #f59e0b;
+            r: 2.5;
+            opacity: 0;
+            filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.8));
+        }
+
+        .vita-control-button {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .vita-control-button:hover {
+            transform: translateX(-50%) translateY(-1px);
+            box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .vita-phase-indicator {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #64748b;
+            font-size: 8px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        @keyframes vita-arrowFlow {
+            0% { opacity: 0; transform: translateY(-50%) scaleX(0); }
+            20% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+            80% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+            100% { opacity: 0; transform: translateY(-50%) scaleX(0); }
+        }
+
+        @keyframes vita-drawCurve {
+            from { stroke-dasharray: 0, 250; }
+            to { stroke-dasharray: 250, 0; }
+        }
+
+        @keyframes vita-pointAppear {
+            to { opacity: 1; }
+        }
+
+        @keyframes vita-curveAppear {
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 1000px) {
+            .vita-stage {
+                min-width: 600px;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .vita-stage {
+                min-width: 500px;
+                height: 280px;
+            }
+            
+            .vita-robot-image, .vita-latent-container, .vita-latent-action-container {
+                height: 80px;
+            }
+            
+            .vita-flow-pipeline, .vita-action-display {
+                height: 80px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -136,33 +766,62 @@
         </div>
     </section>
 
-    <!-- Video Teaser -->
-    <!-- 
-    <section class="hero teaser">
-        <div class="container is-fullhd">
-            <div class="hero-body">
-                <div class="container">
-                    <div class="columns is-vcentered  is-centered">
-                        <div class="publication-video">
-                            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0"
-                                allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                        </br>
-                    </div>
-                    <br>
-                    <h2 class="subtitle has-text-centered">
-                        <span class="dperact">We introduce <b>VITA</b>, a <b>VIsion-To-Action flow matching policy</b> that evolves latent visual representations into latent actions via flow matching for visuomotor control. VITA eliminates the need for separate conditioning modules while preserving generative modeling capabilities.</span>
-                    </h2>
-                </div>
-            </div>
-        </div>
-    </section>
-    -->
-
     <div class="highlight-box">
         <span class="icon"><i class="fas fa-bolt"></i></span>
         VITA directly flows from <span class="cool-keyword">latent images</span> to <span class="cool-keyword">latent actions</span>—<br>without sampling from <span class="cool-keyword">Gaussian noise</span> or relying on <span class="cool-keyword">conditioning modules</span>.
     </div>
+
+    <!-- VITA Animation Section -->
+    <section class="section">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered">
+                <div class="column is-full-width">
+                    <div class="vita-animation-container">
+                        <div class="vita-stage">
+                            <div class="vita-title">VITA: Vision-to-Action Flow Matching</div>
+                            <div class="vita-subtitle">Noise-Free, Conditioning-Free Policy Learning</div>
+                            
+                            <div class="vita-pipeline">
+                                <div class="vita-section vita-image-section">
+                                    <div class="vita-robot-image">
+                                        <img src="static/images/cam_image.png" alt="Camera Image" />
+                                    </div>
+                                    <div class="vita-label">Camera Image</div>
+                                </div>
+
+                                <div class="vita-section vita-latent-image-section" id="vitaLatentImageSection">
+                                    <div class="vita-latent-container" id="vitaLatentImages"></div>
+                                    <div class="vita-label">Latent Images</div>
+                                </div>
+
+                                <div class="vita-section vita-flow-section" id="vitaFlowSection">
+                                    <div class="vita-flow-pipeline" id="vitaFlowPipeline"></div>
+                                    <div class="vita-label">Flow Matching</div>
+                                </div>
+
+                                <div class="vita-section vita-latent-action-section" id="vitaLatentActionSection">
+                                    <div class="vita-latent-action-container" id="vitaLatentActions"></div>
+                                    <div class="vita-label">Latent Actions</div>
+                                </div>
+
+                                <div class="vita-section vita-action-section" id="vitaActionSection">
+                                    <div class="vita-action-display" id="vitaActionDisplay">
+                                        <svg class="vita-action-path" viewBox="0 0 100 100">
+                                            <path class="vita-action-curve" id="vitaActionCurve" d="M 15,80 Q 30,25 50,55 Q 70,85 85,35"/>
+                                        </svg>
+                                    </div>
+                                    <div class="vita-label">Action Sequence</div>
+                                </div>
+                            </div>
+
+                            <div class="vita-phase-indicator" id="vitaPhaseText">Ready to start VITA process</div>
+                            <button class="vita-control-button" onclick="startVitaAnimation()">Start VITA Process</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Abstract -->
     <section class="section hero is-light">
@@ -192,6 +851,7 @@
             </div>
         </div>
     </section>
+
 
     <!-- System Diagram -->
     <section class="section hero">
@@ -374,6 +1034,310 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // VITA Animation JavaScript
+        let vitaIsAnimating = false;
+        let vitaAllParticles = [];
+
+        // Calculate points exactly on the curve
+        function vitaGetPointOnCurve(t) {
+            if (t <= 0.5) {
+                const localT = t * 2;
+                const x = Math.pow(1-localT, 2) * 15 + 2 * (1-localT) * localT * 30 + Math.pow(localT, 2) * 50;
+                const y = Math.pow(1-localT, 2) * 80 + 2 * (1-localT) * localT * 25 + Math.pow(localT, 2) * 55;
+                return {x, y};
+            } else {
+                const localT = (t - 0.5) * 2;
+                const x = Math.pow(1-localT, 2) * 50 + 2 * (1-localT) * localT * 70 + Math.pow(localT, 2) * 85;
+                const y = Math.pow(1-localT, 2) * 55 + 2 * (1-localT) * localT * 85 + Math.pow(localT, 2) * 35;
+                return {x, y};
+            }
+        }
+
+        function vitaCreateParticle(className, container) {
+            const particle = document.createElement('div');
+            particle.className = `vita-particle ${className}`;
+            container.appendChild(particle);
+            vitaAllParticles.push(particle);
+            return particle;
+        }
+
+        function vitaClearAll() {
+            vitaAllParticles.forEach(p => p.remove());
+            vitaAllParticles = [];
+            
+            const curve = document.getElementById('vitaActionCurve');
+            const actionPoints = document.querySelectorAll('.vita-action-point');
+            curve.style.animation = 'none';
+            curve.style.opacity = '0';
+            actionPoints.forEach(point => point.remove());
+            
+            document.getElementById('vitaLatentImageSection').classList.remove('visible');
+            document.getElementById('vitaFlowSection').classList.remove('visible');
+            document.getElementById('vitaLatentActionSection').classList.remove('visible');
+            document.getElementById('vitaActionSection').classList.remove('visible');
+        }
+
+        function vitaUpdatePhase(text) {
+            document.getElementById('vitaPhaseText').textContent = text;
+        }
+
+        function vitaShowSection(sectionId) {
+            document.getElementById(sectionId).classList.add('visible');
+        }
+
+        function vitaShowArrow(fromSection, toSection, duration = 400) {
+            return new Promise(resolve => {
+                const fromRect = fromSection.getBoundingClientRect();
+                const toRect = toSection.getBoundingClientRect();
+                const stageRect = document.querySelector('.vita-stage').getBoundingClientRect();
+                
+                const arrow = document.createElement('div');
+                arrow.className = 'vita-arrow';
+                
+                const startX = fromRect.right - stageRect.left;
+                const endX = toRect.left - stageRect.left;
+                const width = endX - startX - 2;
+                
+                arrow.style.left = startX + 'px';
+                arrow.style.width = width + 'px';
+                arrow.style.animation = `vita-arrowFlow ${duration}ms ease-in-out`;
+                
+                document.querySelector('.vita-stage').appendChild(arrow);
+                
+                setTimeout(() => {
+                    arrow.remove();
+                    resolve();
+                }, duration);
+            });
+        }
+
+        function vitaGetRandomPositions(container, count) {
+            const rect = container.getBoundingClientRect();
+            const stageRect = document.querySelector('.vita-stage').getBoundingClientRect();
+            const positions = [];
+            
+            for (let i = 0; i < count; i++) {
+                positions.push({
+                    x: (rect.left - stageRect.left) + 6 + Math.random() * (rect.width - 12),
+                    y: (rect.top - stageRect.top) + 6 + Math.random() * (rect.height - 12)
+                });
+            }
+            return positions;
+        }
+
+        function vitaCreateVisionParticles() {
+            const imageContainer = document.querySelector('.vita-robot-image');
+            const positions = vitaGetRandomPositions(imageContainer, 6);
+            
+            positions.forEach((pos, i) => {
+                const particle = vitaCreateParticle('vita-vision-particle', document.querySelector('.vita-stage'));
+                particle.style.left = pos.x + 'px';
+                particle.style.top = pos.y + 'px';
+                
+                setTimeout(() => {
+                    particle.style.opacity = '1';
+                }, i * 30);
+            });
+        }
+
+        function vitaMoveParticlesToContainer(targetContainer, newClass) {
+            return new Promise(resolve => {
+                const positions = vitaGetRandomPositions(targetContainer, vitaAllParticles.length);
+                
+                vitaAllParticles.forEach((particle, i) => {
+                    const pos = positions[i];
+                    particle.style.left = pos.x + 'px';
+                    particle.style.top = pos.y + 'px';
+                    particle.className = `vita-particle ${newClass}`;
+                });
+                
+                setTimeout(resolve, 500);
+            });
+        }
+
+        function vitaAnimateFlowMatching() {
+            return new Promise(resolve => {
+                const flowPipeline = document.getElementById('vitaFlowPipeline');
+                const pipelineRect = flowPipeline.getBoundingClientRect();
+                const stageRect = document.querySelector('.vita-stage').getBoundingClientRect();
+                
+                const startX = pipelineRect.left - stageRect.left + 8;
+                const endX = pipelineRect.right - stageRect.left - 8;
+                const centerY = pipelineRect.top + pipelineRect.height / 2 - stageRect.top;
+                const pipelineWidth = endX - startX;
+                
+                // 3-step flow matching animation (reduced from 4)
+                const steps = 3;
+                let currentStep = 0;
+                
+                function animateStep() {
+                    if (currentStep >= steps) {
+                        resolve();
+                        return;
+                    }
+                    
+                    const progress = currentStep / (steps - 1);
+                    
+                    vitaAllParticles.forEach((particle, i) => {
+                        if (particle.classList.contains('vita-latent-image-particle') || 
+                            particle.classList.contains('vita-flow-particle')) {
+                            
+                            // Position along pipeline
+                            const particleProgress = progress + (i / vitaAllParticles.length) * 0.1;
+                            const clampedProgress = Math.min(Math.max(particleProgress, 0), 1);
+                            const x = startX + pipelineWidth * clampedProgress;
+                            const y = centerY + (Math.random() - 0.5) * 30;
+                            
+                            // Color interpolation from blue to green
+                            const blueAmount = 1 - clampedProgress;
+                            const greenAmount = clampedProgress;
+                            
+                            const r = Math.round(96 * blueAmount + 52 * greenAmount);
+                            const g = Math.round(165 * blueAmount + 211 * greenAmount);
+                            const b = Math.round(250 * blueAmount + 153 * greenAmount);
+                            
+                            particle.style.left = x + 'px';
+                            particle.style.top = y + 'px';
+                            particle.style.background = `radial-gradient(circle, rgb(${r}, ${g}, ${b}), rgb(${Math.round(r*0.8)}, ${Math.round(g*0.8)}, ${Math.round(b*0.8)}))`;
+                            particle.style.boxShadow = `0 0 4px rgba(${r}, ${g}, ${b}, 0.8)`;
+                            particle.className = 'vita-particle vita-flow-particle';
+                        }
+                    });
+                    
+                    currentStep++;
+                    setTimeout(animateStep, 600);
+                }
+                
+                animateStep();
+            });
+        }
+
+        function vitaClearLatentActionParticles() {
+            vitaAllParticles = vitaAllParticles.filter(particle => {
+                if (particle.classList.contains('vita-latent-action-particle')) {
+                    particle.remove();
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        function vitaCreateActionSequence() {
+            const svg = document.querySelector('.vita-action-path');
+            const curve = document.getElementById('vitaActionCurve');
+            
+            // Create 7 points exactly on the curve
+            const numPoints = 7;
+            for (let i = 0; i < numPoints; i++) {
+                const t = i / (numPoints - 1);
+                const point = vitaGetPointOnCurve(t);
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('class', 'vita-action-point');
+                circle.setAttribute('cx', point.x);
+                circle.setAttribute('cy', point.y);
+                circle.setAttribute('r', '2.5');
+                circle.setAttribute('fill', '#f59e0b');
+                circle.style.opacity = '0';
+                circle.style.filter = 'drop-shadow(0 0 2px rgba(245, 158, 11, 0.8))';
+                
+                svg.appendChild(circle);
+            }
+            
+            const points = document.querySelectorAll('.vita-action-point');
+            
+            // First show all points along the curve
+            points.forEach((point, i) => {
+                setTimeout(() => {
+                    point.style.animation = 'vita-pointAppear 300ms ease-out forwards';
+                }, i * 80);
+            });
+            
+            // Then draw the connecting curve
+            setTimeout(() => {
+                curve.style.animation = 'vita-curveAppear 400ms ease-out forwards, vita-drawCurve 600ms ease-out forwards';
+            }, points.length * 80 + 300);
+        }
+
+        async function startVitaAnimation() {
+            if (vitaIsAnimating) return;
+            
+            vitaIsAnimating = true;
+            document.querySelector('.vita-control-button').textContent = 'Running...';
+            
+            vitaClearAll();
+            
+            // Step 1: Create vision particles
+            vitaUpdatePhase('Encoding camera image to particles');
+            vitaCreateVisionParticles();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Step 2: Show latent image section and move particles
+            vitaUpdatePhase('Flowing to latent image space');
+            vitaShowSection('vitaLatentImageSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-image-section'),
+                document.querySelector('.vita-latent-image-section')
+            );
+            await vitaMoveParticlesToContainer(
+                document.getElementById('vitaLatentImages'), 
+                'vita-latent-image-particle'
+            );
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 3: Show flow matching pipeline
+            vitaUpdatePhase('Flow matching: gradual transformation');
+            vitaShowSection('vitaFlowSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-latent-image-section'),
+                document.querySelector('.vita-flow-section')
+            );
+            await vitaAnimateFlowMatching();
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 4: Show latent action section and move particles
+            vitaUpdatePhase('Reaching latent action space');
+            vitaShowSection('vitaLatentActionSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-flow-section'),
+                document.querySelector('.vita-latent-action-section')
+            );
+            await vitaMoveParticlesToContainer(
+                document.getElementById('vitaLatentActions'), 
+                'vita-latent-action-particle'
+            );
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 5: Show action section and decode
+            vitaUpdatePhase('Decoding to action sequence');
+            vitaShowSection('vitaActionSection');
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            await vitaShowArrow(
+                document.querySelector('.vita-latent-action-section'),
+                document.querySelector('.vita-action-section')
+            );
+            
+            vitaClearLatentActionParticles();
+            vitaCreateActionSequence();
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            vitaUpdatePhase('VITA process complete!');
+            document.querySelector('.vita-control-button').textContent = 'Restart VITA Process';
+            vitaIsAnimating = false;
+        }
+
+        // Auto-start animation when page loads
+        setTimeout(startVitaAnimation, 1000);
+    </script>
 
 </body>
 
