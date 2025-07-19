@@ -1365,7 +1365,7 @@
             vitaCreateActionSequence();
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            vitaUpdatePhase('VITA process complete!');
+            vitaUpdatePhase('Action generated!');
             document.querySelector('.vita-control-button').textContent = 'Restart';
             vitaIsAnimating = false;
         }
