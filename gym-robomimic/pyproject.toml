@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gym_robomimic"
+version = "0.1.0"
+description = "lerobot style robomimic"
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gymnasium",
+    "robomimic@git+https://github.com/ian-chuang/robomimic.git",
+    "robosuite@git+https://github.com/ian-chuang/robosuite.git"
+]
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["gym_robomimic*"]
+

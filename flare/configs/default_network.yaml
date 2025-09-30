@@ -1,0 +1,64 @@
+defaults:
+  - _self_
+  - task: pusht
+  - network: action_vae
+
+session: ${network.name}-${now:%Y%m%d_%H%M%S}
+base_dir: ${hydra:runtime.cwd}
+output_dir: ${base_dir}/flare_outputs/${task.name}/${network.name}/${session}
+log_dir: ${output_dir}/logs
+checkpoint_dir: ${output_dir}/checkpoints
+checkpoint_path: null
+eval_dir: ${output_dir}/eval
+val_dir: ${output_dir}/val
+resume: false
+
+debug: false
+seed: 42
+device: cuda:0
+
+# Training
+optimizer_lr: 1e-4
+optimizer_lr_backbone: 1e-5
+optimizer_betas: [0.95, 0.999]
+optimizer_eps: 1e-8
+optimizer_weight_decay: 1e-6
+scheduler_name: cosine
+scheduler_warmup_steps: 500
+use_ema: true
+ema_power: 0.75
+
+# Training settings
+train:
+  steps: 100000
+  batch_size: 128
+  num_workers: 16
+  log_freq: 100
+  save_freq: 5000
+  keep_freq: 50000
+  grad_clip_norm: 1.0
+  save_best: true
+
+# Validation settings
+val:
+  num_episodes: 2
+  val_offline_freq: 1000
+  batch_size: 512
+  num_viz_samples: 4
+
+# TensorBoard settings
+tensorboard:
+  enable: false
+
+# WandB settings
+wandb:
+  enable: true
+  project: le-flare-${task.name}
+  entity: "flare-robot"
+  name: ${session}-${network.name}
+  notes: null
+  group: ${network.name}
+  tags:
+    - ${network.name}
+    - ${network.trainer}
+  upload_checkpoints: false

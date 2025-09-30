@@ -1,0 +1,34 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="cube" pos="0 0 0">
+            <joint name="cube_joint" type="free" />
+            <geom  pos="0 0 0.02" size="0.015 0.015 0.015" type="box" name="cube" rgba="1 0 0 1" solref="0.01 1"/>
+        </body>
+
+        <body name="adverse" pos="0 0 -1">
+            <joint name="adverse_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.005" size="0.01 0.015 0.005" type="ellipsoid" name="adverse" rgba="1 0 0 1"/>
+        </body>
+
+        <body name="distractor1" pos="0 0 -1">
+            <joint name="distractor1_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.015 0.015 0.01" type="box" name="distractor1" rgba="1 1 0 1" />
+        </body>
+
+        <body name="distractor2" pos="0 0 -1">
+            <joint name="distractor2_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.015 0.01" type="cylinder" name="distractor2" rgba="1 0 1 1" />
+        </body>
+
+        <body name="distractor3" pos="0 0 -1">
+            <joint name="distractor3_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.02 0.02 0.01" type="ellipsoid" name="distractor3" rgba="0 1 1 1"/>
+        </body>
+
+    </worldbody>
+
+</mujoco>
+
+

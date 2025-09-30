@@ -1,0 +1,45 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="wall" pos="0 0 0">
+            <joint name="wall_joint" type="free" />
+            <geom friction="0.01" name="wall-1"  pos="0 0 0.01" size="0.05 0.1 0.01" type="box" rgba=".8 .4 .4 1" mass="100"/>
+            <geom friction="0.01" name="wall-2" pos="0 .0575 0.0425" size="0.01 0.0425 0.0425" type="box" rgba=".8 .4 .4 1" mass="1"/>
+            <geom friction="0.01" name="wall-3" pos="0 -.0575 0.0425" size="0.01 0.0425 0.0425" type="box" rgba=".8 .4 .4 1" mass="1"/>
+            <geom friction="0.01" name="wall-4" pos="0 0 0.0175" size="0.01 0.015 0.0175" type="box" rgba=".8 .4 .4 1" mass="1"/>
+            <geom friction="0.01" name="wall-5" pos="0 0 0.075" size="0.01 0.015 0.01" type="box" rgba=".8 .4 .4 1" mass="1"/>
+            <geom  pos="0 0 0.05" size="0.01 0.01 0.01" type="box" name="pin-wall" rgba="1 0 0 1" gap="100" group="3" mass="0"/>
+        </body>
+
+        <body name="needle" pos="0.15 0 0" >
+            <joint name="needle_joint" type="free" />
+            <geom name="needle" pos="0 0 0.01" size="0.05 0.01  0.01" type="box" rgba=".4 .8 .4 1" friction="1" solref="0.01 1"/> 
+            <geom  pos="0 0 0.01" size="0.003 0.01 0.01" type="box" name="pin-needle" rgba="1 0 0 1" gap="100" group="3" mass="0"/>
+        </body>
+
+        <body name="adverse" pos="0 0 -1">
+            <joint name="adverse_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.005" size="0.01 0.015 0.005" type="ellipsoid" name="adverse" rgba=".4 .8 .4 1"/>
+        </body>
+
+        <body name="distractor1" pos="0 0 -1">
+            <joint name="distractor1_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.015 0.015 0.01" type="box" name="distractor1" rgba="1 1 0 1" />
+        </body>
+
+        <body name="distractor2" pos="0 0 -1">
+            <joint name="distractor2_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.015 0.01" type="cylinder" name="distractor2" rgba="1 0 1 1" />
+        </body>
+
+        <body name="distractor3" pos="0 0 -1">
+            <joint name="distractor3_joint" type="free" damping="1e8"/>
+            <geom  pos="0 0 0.01" size="0.02 0.02 0.01" type="ellipsoid" name="distractor3" rgba="0 1 1 1"/>
+        </body>
+
+    </worldbody>
+
+</mujoco>
+
+

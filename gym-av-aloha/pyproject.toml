@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "gym_av_aloha"
+version = "0.1.0"
+description = "gym env for gaze av aloha project"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+mujoco = "^3.2.2"
+dm-control = "^1.0.22"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

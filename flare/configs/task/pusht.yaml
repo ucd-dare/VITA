@@ -1,0 +1,33 @@
+# @package _global_
+
+resize_shape: [96, 96]
+crop_shape: [84, 84]
+
+task:
+  name: lerobot_pusht
+  dataset_repo_id: lerobot/pusht
+  dataset_root: ${oc.env:FLARE_DATASETS_DIR}/lerobot/pusht
+  dataset_episodes: null
+  override_stats:
+    observation.image:
+      mean: [[[0.485]], [[0.456]], [[0.406]]]
+      std: [[[0.229]], [[0.224]], [[0.225]]]
+
+  env_package: gym_pusht
+  env_name: PushT-v0
+  env_kwargs:
+    disable_env_checker: true
+    # legacy: false
+    # action_scale: 1
+    obs_type: pixels_agent_pos
+    render_mode: rgb_array
+    observation_width: 96
+    observation_height: 96
+
+  fps: 10
+  image_keys:
+    - observation.image
+  state_key: observation.state
+  action_key: action
+  state_dim: 2
+  action_dim: 2

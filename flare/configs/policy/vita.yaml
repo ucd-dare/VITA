@@ -1,0 +1,63 @@
+# @package _global_
+
+policy:
+  name: vita
+  trainer: policy
+
+  action_horizon: 8
+  pred_horizon: 16
+  obs_horizon: 1
+
+  observer:
+    name: resnet18
+    tokenize: false
+
+  vita:
+    decode_flow_latents: true
+    consistency_weight: 1.0
+    enc_contrastive_weight: 1e-4
+    flow_contrastive_weight: 0.0
+    latent_dim: 512
+    noise_std: 0.0
+
+  flow_matcher:
+    name: exact
+    sigma: 0.0
+    num_sampling_steps: 6
+
+  flow_net:
+    name: simple
+    hidden_dim: 512
+    num_layers: 4
+    num_heads: 8
+    mlp_ratio: 4
+    dropout: 0.0
+  
+  use_cvae: false
+
+  obs_ae:
+    use_variational: false
+    kl_weight: 0.0
+    recon_weight: 0.0
+    hidden_dim: 512
+    num_layers: 1
+
+  action_ae:
+    kl_weight: 1e-6
+    enc_recon_weight: 0.5
+    flow_recon_weight: 0.5
+    recon_loss_type: l1 # or l2
+    use_variational: false
+    freeze_encoder: false
+    freeze_decoder: false
+
+    net:
+      encoder_type: cnn
+      decoder_type: simple
+      enc_hidden_dim: 512
+      dec_hidden_dim: 512
+      latent_dim: ${policy.vita.latent_dim}
+      num_heads: 8
+      mlp_ratio: 4
+      dropout: 0.0
+      num_layers: 4

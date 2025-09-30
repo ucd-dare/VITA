@@ -1,0 +1,24 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="peg" pos="0 -0.019 0.04">
+            <joint name="peg_joint" type="free" />
+            <!-- HACK: modifief solref different from data collection -->
+            <geom  pos="0 0 0" size="0.06 0.01 0.01" type="box" name="peg" rgba="1 0 0 1" friction="0.5" solref="0.01 1"/>
+        </body>
+
+        <body name="hole" pos="0 0.019 0.04">
+            <joint name="hole_joint" type="free" />
+            <geom  pos="0 0 -0.02" size="0.06 0.018 0.002" type="box" name="hole-1" rgba="0 0 1 1" friction="0.5"/>
+            <geom  pos="0 0 0.02" size="0.06 0.018 0.002" type="box" name="hole-2" rgba="0 0 1 1" friction="0.5"/>
+            <geom  pos="0 0.02 0" size="0.06 0.002 0.018" type="box" name="hole-3" rgba="0 0 1 1"  friction="0.5"/>
+            <geom  pos="0 -0.02 0" size="0.06 0.002 0.018" type="box" name="hole-4" rgba="0 0 1 1" friction="0.5"/>
+            <geom  pos="0 0 0" size="0.02 0.01 0.01" type="box" name="pin" rgba="1 0 0 1" gap="100" group="3" />
+        </body>
+
+    </worldbody>
+
+</mujoco>
+
+

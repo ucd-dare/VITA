@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flare"
+version = "0.1.0"
+description = "An Open-Source Library for VITA Flow Matching Policies"
+authors = [
+    { name="Dechen Gao", email="dechengao@gmail.com" },
+    { name="Boqi Zhao", email="boqzhao@ucdavis.edu" },
+    { name="Andrew Lee", email="awclee@ucdavis.edu" },
+    { name="Hanchu Zhou", email="hczhou@ucdavis.edu" },
+    { name="Ian Chuang", email="iantc104@gmail.com" },
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # TODO
+]
+
+[project.urls]
+"Homepage" = "https://ucd-dare.github.io/VITA/"
+"Documentation" = "https://github.com/ucd-dare/VITA"
+"Source" = "https://github.com/ucd-dare/VITA"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["flare*"]
+
+[project.scripts]
+flare-train = "flare.train:main"
+flare-eval = "flare.eval:main"

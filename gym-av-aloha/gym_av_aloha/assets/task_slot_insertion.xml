@@ -1,0 +1,22 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="slot" pos="0 0.1 0">
+            <joint name="slot_joint" type="free" />
+            <geom name="slot-1"  pos="0 0.032 0.02" size="0.1 0.015 0.02" type="box" rgba=".8 .4 .4 1" mass="50" friction="0.05"/>
+            <geom name="slot-2" pos="0 -0.032 0.02" size="0.1 0.015 0.02" type="box" rgba=".8 .4 .4 1" mass="50" friction="0.05"/>
+            <geom  pos="0 0 0.01" size="0.07 0.015 0.005" type="box" name="pin-slot" rgba="1 0 0 1" gap="100" group="3" mass="0"/>
+        </body>
+
+        <body name="stick" pos="0 -0.1 0" >
+            <joint name="stick_joint" type="free" />
+            <geom name="stick" pos="0 0 0.02" size="0.17 0.013 0.02" type="box" rgba=".4 .8 .4 1"/>
+            <geom  pos="0 0 0.01" size="0.02 0.013 0.005" type="box" name="pin-stick" rgba="1 0 0 1" gap="100" group="3" mass="0"/>
+        </body>
+
+    </worldbody>
+
+</mujoco>
+
+

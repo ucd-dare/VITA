@@ -1,0 +1,45 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="ball" pos="0.1 0 0">
+            <joint name="ball_joint" type="free"  armature="0.00000175" />
+            <geom pos="0 0 0.04" size="0.005" type="sphere" name="ball" 
+                rgba="1 0 0 1" friction="0.00001"  />
+        </body>
+
+        <body name="tube1" pos="0.1 0 0">
+            <!-- Free joint to allow the test tube to move freely -->
+            <joint name="tube1_joint" type="free" armature="0.00001" />
+
+            <!-- Transparent white walls -->
+            <geom pos="0 0.015 0.05" size="0.015 0.0035 0.05" type="box" name="tube1-1" rgba="1 1 1 0.5" friction="0.6"/>
+            <geom pos="0.015 0 0.05" size="0.015 0.0035 0.05" type="box" name="tube1-2" rgba="1 1 1 0.5" friction="0.6" euler="0 0 1.57"/>
+            <geom pos="0 -0.015 0.05" size="0.015 0.0035 0.05" type="box" name="tube1-3" rgba="1 1 1 0.5" friction="0.6" euler="0 0 0"/>
+            <geom pos="-0.015 0 0.05" size="0.015 0.0035 0.05" type="box" name="tube1-4" rgba="1 1 1 0.5" friction="0.6" euler="0 0 1.57"/>
+
+            <!-- Bottom of the test tube -->
+            <geom pos="0 0 0.005" size="0.02 0.02 0.005" type="box" name="tube1-5" rgba="1 1 1 0.5" friction="0.6"/>
+        </body>
+
+        <body name="tube2" pos="-.1 0 0">
+            <!-- Free joint to allow the test tube to move freely -->
+            <joint name="tube2_joint" type="free" armature="0.00001"/>
+
+            <!-- Transparent white walls -->
+            <geom pos="0 0.015 0.05" size="0.015 0.0035 0.05" type="box" name="tube2-1" rgba="1 1 1 0.5" friction="0.6"/>
+            <geom pos="0.015 0 0.05" size="0.015 0.0035 0.05" type="box" name="tube2-2" rgba="1 1 1 0.5" friction="0.6" euler="0 0 1.57"/>
+            <geom pos="0 -0.015 0.05" size="0.015 0.0035 0.05" type="box" name="tube2-3" rgba="1 1 1 0.5" friction="0.6" euler="0 0 0"/>
+            <geom pos="-0.015 0 0.05" size="0.015 0.0035 0.05" type="box" name="tube2-4" rgba="1 1 1 0.5" friction="0.6" euler="0 0 1.57"/>
+
+            <!-- Bottom of the test tube -->
+            <geom pos="0 0 0.005" size="0.02 0.02 0.005" type="box" name="tube2-5" rgba="1 1 1 0.5" friction="0.6"/>
+
+            <geom  pos="0 0 0.045" size="0.012 0.012 0.04" type="box" name="pin" rgba="1 0 0 1" gap="100" group="3" mass="0"/>
+        </body>
+
+    </worldbody>
+
+</mujoco>
+
+

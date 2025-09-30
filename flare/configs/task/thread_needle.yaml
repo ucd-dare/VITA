@@ -1,0 +1,32 @@
+# @package _global_
+
+resize_shape: [240, 320]
+crop_shape: [224, 308]
+
+task:
+  name: avaloha_thread_needle
+  dataset_repo_id: iantc104/av_aloha_sim/av_aloha_sim_thread_needle
+  dataset_root: ${oc.env:FLARE_DATASETS_DIR}/iantc104/av_aloha_sim_thread_needle
+  dataset_episodes: null
+  override_stats:
+    observation.images.zed_cam_left:
+      mean: [[[0.485]], [[0.456]], [[0.406]]]
+      std: [[[0.229]], [[0.224]], [[0.225]]]
+
+  env_package: gym_av_aloha
+  env_name: thread-needle-v1
+  env_kwargs:
+    fps: 8.33333333333
+    cameras:
+      zed_cam_left: [480, 640]
+    render_camera: zed_cam_left
+    enable_av: true
+    max_episode_steps: 125
+
+  fps: 8.333333333
+  image_keys:
+    - observation.images.zed_cam_left
+  state_key: observation.state
+  action_key: action
+  state_dim: 21
+  action_dim: 21

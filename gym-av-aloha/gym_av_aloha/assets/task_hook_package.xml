@@ -1,0 +1,33 @@
+<mujoco>
+    <include file="scene.xml"/>
+    <worldbody>
+
+        <body name="wall" pos="0 0 0">
+            <geom  pos="0 0.31 0.3" size="0.4 0.01 0.3" type="box" name="wall" rgba="0.4 .4 .4 1" friction="0.5"/>
+        </body>
+
+        <body name="hook" pos="0 0.3 0.2">
+            <joint name="hook_joint" type="free" damping="1e9" armature="0.001"/>
+            <geom  pos="0 0 0" size="0.006 0.1" euler="1.3 0 0" type="cylinder" name="hook" rgba="0 0 1 1" friction="0.01" solref="0.01 1"/>
+            <geom  pos="0 0 0" size="0.005 0.075" euler="1.3 0 0" type="cylinder" name="pin-hook" rgba="0 1 0 1" gap="100" group="3"/>
+        </body>
+
+        <body name="package" pos="0 0 0">
+            <joint name="package_joint" type="free" />
+
+            <geom  pos="0 -.01 0.05" size="0.05 0.015 0.05" type="box" name="package-1" rgba="1 0 0 1" friction="0.5" density="500"/>
+            <geom pos="-0.015 0 0.115" size="0.005 0.005 0.015" type="box" name="package-2" rgba="1 0 0 1" friction="0.01"    solref="0.01 1"/>
+            <geom pos="0.015 0 0.115" size="0.005 0.005 0.015" type="box" name="package-3" rgba="1 0 0 1" friction="0.01"  solref="0.01 1"/>
+            <geom pos="0 0 0.125" size=".02 .005 0.005" type="box" name="package-4" rgba="1 0 0 1" friction="0.01"  solref="0.01 1"/>
+
+            <geom  pos="0 0 .11" size="0.01 0.003 0.01" type="box" name="pin-package" rgba="0 1 0 1" gap="100" group="3" mass="0" />
+            
+        </body>
+
+    </worldbody>
+
+
+
+    
+
+</mujoco>

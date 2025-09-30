@@ -1,0 +1,30 @@
+# @package _global_
+
+network:
+  name: action_vae
+  trainer: policy
+
+  action_horizon: 8
+  pred_horizon: 16
+  obs_horizon: 1
+
+  observer:
+    name: resnet18
+    tokenize: false
+
+  action_ae:
+    kl_weight: 1e-4
+    recon_weight: 1.0
+    recon_loss_type: l1 # or l2
+    use_variational: true
+
+    net:
+      encoder_type: cnn
+      decoder_type: simple
+      enc_hidden_dim: 512
+      dec_hidden_dim: 512
+      latent_dim: 512
+      num_heads: 8
+      mlp_ratio: 4
+      dropout: 0.1
+      num_layers: 4

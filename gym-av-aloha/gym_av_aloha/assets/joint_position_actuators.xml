@@ -1,0 +1,40 @@
+<mujoco>
+  <actuator>
+    <position class="waist" name="left_waist" joint="left_waist"/>
+    <position class="shoulder" name="left_shoulder" joint="left_shoulder"/>
+    <position class="elbow" name="left_elbow" joint="left_elbow"/>
+    <position class="forearm_roll" name="left_forearm_roll" joint="left_forearm_roll"/>
+    <position class="wrist_angle" name="left_wrist_angle" joint="left_wrist_angle"/>
+    <position class="wrist_rotate" name="left_wrist_rotate" joint="left_wrist_rotate"/>
+    <position class="finger" name="left_gripper" joint="left_left_finger"/>
+
+    <position class="waist" name="right_waist" joint="right_waist"/>
+    <position class="shoulder" name="right_shoulder" joint="right_shoulder"/>
+    <position class="elbow" name="right_elbow" joint="right_elbow"/>
+    <position class="forearm_roll" name="right_forearm_roll" joint="right_forearm_roll"/>
+    <position class="wrist_angle" name="right_wrist_angle" joint="right_wrist_angle"/>
+    <position class="wrist_rotate" name="right_wrist_rotate" joint="right_wrist_rotate"/>
+    <position class="finger" name="right_gripper" joint="right_left_finger"/>
+
+    <position class="waist" name="middle_waist" joint="middle_waist"/>
+    <position class="shoulder" name="middle_shoulder" joint="middle_shoulder"/>
+    <position class="elbow" name="middle_elbow" joint="middle_elbow"/>
+    <position class="forearm_roll" name="middle_forearm_roll" joint="middle_forearm_roll"/>
+    <position class="wrist_1_joint" name="middle_wrist_1_joint" joint="middle_wrist_1_joint"/>
+    <position class="wrist_2_joint" name="middle_wrist_2_joint" joint="middle_wrist_2_joint"/>
+    <position class="wrist_3_joint" name="middle_wrist_3_joint" joint="middle_wrist_3_joint"/>
+  </actuator>
+
+  <!-- <keyframe>
+    <key name="neutral_pose" qpos="
+    0 -0.96 1.16 0 -0.3 0 0.0084 0.0084
+    0 -0.96 1.16 0 -0.3 0 0.0084 0.0084
+    0 -0.96 1.16 0 -0.3 0 0"
+      ctrl="
+    0 -0.96 1.16 0 -0.3 0 0.0084
+    0 -0.96 1.16 0 -0.3 0 0.0084
+    0 -0.96 1.16 0 -0.3 0 0"
+    
+    />
+  </keyframe> -->
+</mujoco>
