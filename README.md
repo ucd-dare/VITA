@@ -164,6 +164,24 @@ python flare/train.py policy=vita task=hook_package session=ablate \
   policy.vita.decode_flow_latents=False wandb.notes=ablation
 ```
 
+#### 🎮 Available Tasks
+
+Available task configs are located in ./flare/config/tasks. To launch training with a specific task, set the `task` flag (e.g., `task=cube_transfer` to load `cube_transfer.yaml`).
+
+```yaml
+# AV-ALOHA tasks
+cube_transfer
+hook_package
+pour_test_tube
+slot_insertion
+thread_needle
+# Robomimic
+robomimic_can
+robomimic_square
+# PushT
+pusht
+```
+
 ---
 
 <p align="center">
