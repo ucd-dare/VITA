@@ -30,7 +30,6 @@ authors = [
     { name = "Thomas Wolf", email = "thomaswolfcontact@gmail.com" },
     { name = "Steven Palma", email = "imstevenpmwork@ieee.org" },
 ]
-readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 keywords = ["robotics", "deep learning", "pytorch"]

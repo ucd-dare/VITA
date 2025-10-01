@@ -79,7 +79,12 @@ DATASET_CONFIGS = {
         "remove_keys": ["observation.images.robot0_eye_in_hand"],
         "image_size": (256, 256),
     },
-
+    # pusht
+    "lerobot/pusht": {
+        "episodes": list(range(0, 206)),
+        "remove_keys": [],
+        "image_size": (96, 96),
+    },
 }
 
 

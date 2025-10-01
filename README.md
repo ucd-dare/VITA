@@ -28,7 +28,7 @@ This repository provides the official implementation of the paper **VITA: Vision
 This section covers installation, dataset preprocessing, and training.
 
 * **Policy and training:** `./flare`
-* **Simulation:** AV-ALOHA tasks (`gym-av-aloha`) and Robomimic tasks (`gym-robomimic`)
+* **Simulation:** [AV-ALOHA](https://soltanilara.github.io/av-aloha/) tasks (`gym-av-aloha`) and [Robomimic](https://robomimic.github.io/) tasks (`gym-robomimic`)
 * **Datasets:** Built on [LeRobot](https://github.com/huggingface/lerobot) Hugging Face formats, with optimized preprocessing into offline Zarr for faster training
 
 ---
@@ -38,17 +38,23 @@ This section covers installation, dataset preprocessing, and training.
 ```bash
 git clone git@github.com:ucd-dare/VITA.git
 cd VITA
+conda create --name vita python==3.10
+conda activate vita
+conda install cmake
 pip install -e .
 pip install -r requirements.txt
+# Install LeRobot dependencies
+cd lerobot
+pip install -e .
 ```
 
 Set the dataset storage path:
 
 ```bash
-echo 'export FLARE_DATASETS_DIR=<YOUR_FLARE_PATH>/gym-av-aloha/outputs' >> ~/.bashrc
+echo 'export FLARE_DATASETS_DIR=<PATH_TO_VITA>/gym-av-aloha/outputs' >> ~/.bashrc
 ```
 
-Install dependencies as needed:
+Install benchmark dependencies for AV-ALOHA and/or Robomimic as needed:
 
 * **AV-ALOHA**
 
@@ -71,8 +77,9 @@ pip install -e .
 Our dataloaders extend [LeRobot](https://github.com/huggingface/lerobot), converting datasets into offline zarr format for faster training. We host datasets on HuggingFace. To list available datasets:
 
 ```bash
+# 
 cd gym-av-aloha/scripts
-python convert.py -ls
+python convert.py --ls
 ```
 
 As of Sept 2025, available datasets include:
@@ -86,6 +93,7 @@ As of Sept 2025, available datasets include:
 - iantc104/robomimic_sim_transport
 - iantc104/robomimic_sim_square
 - iantc104/robomimic_sim_can
+- lerobot/pusht
 ```
 
 Convert a HuggingFace dataset (conversion may take >10 minutes) to offline zarr datasets. For example:
