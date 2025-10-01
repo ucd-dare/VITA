@@ -755,7 +755,7 @@
                                         <span class="icon">
                                             <i class="fab fa-github"></i>
                                         </span>
-                                        <span>Code (Coming Soon)</span>
+                                        <span>Code</span>
                                     </a>
                                 </span>
 
@@ -894,7 +894,6 @@
                 <div class="column is-full-width">
                     <h2 class="title is-3">VITA Framework</h2>
 
-                    <!-- Replace with your system diagram -->
                     <img src="static/images/top.png" class="interpolation-image" />
                     <br />
                     <br />
@@ -918,22 +917,19 @@
         <div class="container is-max-widescreen">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full-width">
-                    <h2 class="title is-3">Results</h2>
-                    <!-- Replace with your results figure -->
-                    <img src="static/images/perf.png" class="interpolation-image" />
-                    <br />
-                    <br />
+                    <h2 class="title is-3">VITA Denoising</h2>
 
                     <div class="content has-text-justified">
                         <p>
-                            We evaluate VITA on challenging bi-manual manipulation tasks on
-                            ALOHA, including 5 simulation and 2 real-world tasks. VITA
-                            consistently outperforms or matches state-of-the-art generative
-                            policies (including transformer-based conventional flow matching
-                            policy), while being significantly more efficient with
-                            conditioning-free MLP-only architectures.
+                            Comparison of the denoising process between conventional flow matching and VITA.
+                            Conventional flow matching denoises random Gaussian into actions, VITA
+                            flows from latent images to latent actions, and generated actions at initial steps are more structured.
                         </p>
                     </div>
+
+                    <img src="https://raw.githubusercontent.com/ucd-dare/VITA/refs/heads/main/.assets/denoising.png" class="interpolation-image" />
+                    <br />
+                    <br />
                 </div>
             </div>
         </div>
@@ -1044,6 +1040,31 @@
             </div>
         </div>
     </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Results</h2>
+                    <img src="static/images/perf.png" class="interpolation-image" />
+                    <br />
+                    <br />
+
+                    <div class="content has-text-justified">
+                        <p>
+                            We evaluate VITA on challenging bi-manual manipulation tasks on
+                            ALOHA, including 5 simulation and 2 real-world tasks. VITA
+                            consistently outperforms or matches state-of-the-art generative
+                            policies (including transformer-based conventional flow matching
+                            policy), while being significantly more efficient with
+                            conditioning-free MLP-only architectures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!--BibTex citation -->
     <section class="section" id="BibTeX">
