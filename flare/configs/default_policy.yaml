@@ -58,7 +58,7 @@ tensorboard:
 wandb:
   enable: true
   project: vita-${task.name}
-  entity: "YOUR_WANDB_ENTITY"
+  entity: null
   name: ${session}-${policy.name}
   notes: null
   group: ${policy.name}

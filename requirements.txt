@@ -21,3 +21,5 @@ robomimic
 mujoco==3.3.0
 dm_control==1.0.28
 fvcore
+torchcfm==1.0.5
+timm

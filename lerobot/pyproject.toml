@@ -30,6 +30,7 @@ authors = [
     { name = "Thomas Wolf", email = "thomaswolfcontact@gmail.com" },
     { name = "Steven Palma", email = "imstevenpmwork@ieee.org" },
 ]
+readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 keywords = ["robotics", "deep learning", "pytorch"]
@@ -52,6 +53,7 @@ dependencies = [
     "einops>=0.8.0",
     "flask>=3.0.3",
     "gdown>=5.1.0",
+    "gym-pusht>=0.1.5",
     "gymnasium==0.29.1",                                                 # TODO(rcadene, aliberts): Make gym 1.0.0 work
     "h5py>=3.10.0",
     "huggingface-hub[hf-transfer,cli]>=0.27.1 ; python_version < '4.0'",

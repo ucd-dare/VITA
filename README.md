@@ -46,12 +46,17 @@ pip install -r requirements.txt
 # Install LeRobot dependencies
 cd lerobot
 pip install -e .
+# Install ffmpeg for dataset processing
+conda install -c conda-forge ffmpeg
 ```
 
 Set the dataset storage path:
 
 ```bash
 echo 'export FLARE_DATASETS_DIR=<PATH_TO_VITA>/gym-av-aloha/outputs' >> ~/.bashrc
+# Reload bashrc
+source ~/.bashrc
+conda activate vita
 ```
 
 Install benchmark dependencies for AV-ALOHA and/or Robomimic as needed:
@@ -104,11 +109,18 @@ python convert.py -r iantc104/av_aloha_sim_hook_package
 
 Datasets will be stored in `./gym-av-aloha/outputs`.
 
+If you encounter errors with `cv2`, `numpy`, or `scipy` during the conversion, re-installing them often resolves the issue:
+
+```bash
+pip uninstall opencv-python numpy scipy
+pip install opencv-python numpy scipy
+```
+
 ---
 
 ### 📊 Logging
 
-We use [WandB](https://wandb.ai/) for experiment tracking. Log in with `wandb login`, then set your entity in `./flare/configs/default_policy.yaml`:
+We use [WandB](https://wandb.ai/) for experiment tracking. Log in with `wandb login`, then set your entity in `./flare/configs/default_policy.yaml` (or append `wandb.entity=YOUR_ENTITY_NAME` to the training command):
 
 ```yaml
 wandb:
@@ -143,7 +155,11 @@ Override flags as needed:
 # Example 1: Use a specific GPU
 python flare/train.py policy=vita task=hook_package session=test device=cuda:2
 
-# Example 2: Run an ablation
+# Example 2: Change online validation frequency and episodes
+python flare/train.py policy=vita task=hook_package session=test \
+  val.val_online_freq=2000 val.eval_n_episodes=10
+
+# Example 3: Run an ablation
 python flare/train.py policy=vita task=hook_package session=ablate \
   policy.vita.decode_flow_latents=False wandb.notes=ablation
 ```

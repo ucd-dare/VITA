@@ -65,36 +65,6 @@ class PolicyTrainer:
     def train_step(self, batch):
         """Single training step."""
         import time
-        #         # --- DEBUG: print shapes once ---
-        # if not hasattr(self, "_printed_batch_debug"):
-        #     try:
-        #         st = batch["observation.state"]
-        #         actual = int(st.shape[-1])
-        #         expected = int(self.config.task.state_dim)
-        #         # Print state + first image key
-        #         img_key = self.config.task.image_keys[0]
-        #         img = batch.get(img_key, None)
-
-        #         logging.info(
-        #             f"[DBG] observation.state shape={tuple(st.shape)} "
-        #             f"(last_dim={actual}, expected={expected})"
-        #         )
-        #         if isinstance(img, torch.Tensor):
-        #             logging.info(f"[DBG] {img_key} shape={tuple(img.shape)}")
-        #         else:
-        #             logging.info(f"[DBG] {img_key} not in batch")
-
-        #         # Optional hard guard: fail early on mismatch
-        #         if actual != expected:
-        #             raise ValueError(
-        #                 f"Config task.state_dim={expected} but batch last_dim={actual}. "
-        #                 f"Either set state_dim to {actual} or slice the state vector before the model."
-        #             )
-        #     finally:
-        #         self._printed_batch_debug = True
-        # # --- /DEBUG ---
-
-
         # Move batch to device
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
