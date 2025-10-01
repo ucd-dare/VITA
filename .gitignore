@@ -1,6 +1,6 @@
 logs/
 outputs/
-le_outputs/
+flare_outputs/
 log/
 checkpoints/
 __pycache__/
@@ -10,7 +10,6 @@ ref_*/
 test.ipynb
 transport.pth
 wandb/
-
 .Python
 build/
 develop-eggs/

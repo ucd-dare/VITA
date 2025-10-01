@@ -32,8 +32,6 @@ policy:
     num_heads: 8
     mlp_ratio: 4
     dropout: 0.0
-  
-  use_cvae: false
 
   obs_ae:
     use_variational: false
