@@ -19,30 +19,6 @@ from flare.visualizer.visualizer import plot_trajectory, plot_ode_steps
 logger = logging.getLogger(__name__)
 
 
-def compute_contrastive_loss(image_features, action_features, temperature=0.07):
-    # Normalize features
-    batch_size = image_features.size(0)
-    image_features = F.normalize(image_features, dim=1)
-    action_features = F.normalize(action_features, dim=1)
-
-    # Compute similarity matrix
-    logits = torch.matmul(image_features, action_features.T) / temperature
-
-    # Symmetric contrastive loss (image-to-action + action-to-image)
-    labels = torch.arange(batch_size, device=logits.device)
-    loss_i2a = F.cross_entropy(logits, labels)
-    loss_a2i = F.cross_entropy(logits.T, labels)
-
-    return (loss_i2a + loss_a2i) / 2
-
-
-def nosify(latents, noise_std=None):
-    if noise_std is None or noise_std < 1e-6:
-        return latents
-    noise = torch.randn_like(latents) * noise_std
-    return latents + noise
-
-
 @registry.register_policy("vita")
 class VitaPolicy(BasePolicy):
     def __init__(self, config, stats):
@@ -54,7 +30,6 @@ class VitaPolicy(BasePolicy):
         self.action_horizon = config.policy.action_horizon
         self.action_dim = config.task.action_dim
         self.obs_horizon = config.policy.obs_horizon
-        self.noise_std = config.policy.vita.noise_std  # e.g., sqrt(1e-4) = 1e-2
 
         self.normalize_inputs = Normalize(config.task.image_keys+[config.task.state_key], stats)
         self.normalize_targets = Normalize([config.task.action_key], stats)
@@ -81,7 +56,7 @@ class VitaPolicy(BasePolicy):
         self.latent_dim = action_ae_net_config.latent_dim
         self.num_sampling_steps = config.policy.flow_matcher.num_sampling_steps
         self.freeze_action_encoder = config.policy.action_ae.freeze_encoder
-        self.frezee_action_decoder = config.policy.action_ae.freeze_decoder
+        self.freeze_action_decoder = config.policy.action_ae.freeze_decoder
         self.flow_action_recon_weight = config.policy.action_ae.flow_recon_weight
         self.enc_action_recon_weight = config.policy.action_ae.enc_recon_weight
 
@@ -139,8 +114,6 @@ class VitaPolicy(BasePolicy):
             obs_latents = self.obs_encoder(obs_features)
             obs_posterior = None
 
-        obs_latents = nosify(obs_latents, self.noise_std)
-
         batch_size = obs_features.shape[0]
         gt_actions = batch[self.config.task.action_key]
 
@@ -154,7 +127,7 @@ class VitaPolicy(BasePolicy):
         flow_loss, metrics = self.FM.compute_loss(
             self.flow_net,
             target=action_latents,
-            start=obs_latents
+            start=obs_latents # Use visual latents as the flow source
         )
         loss = flow_loss
         metrics['flow_loss'] = flow_loss.item()
@@ -173,7 +146,7 @@ class VitaPolicy(BasePolicy):
             metrics['enc_contrastive_loss'] = contrastive_loss.item()
 
         # Skip action VAE losses if freezing
-        if self.freeze_action_encoder and self.frezee_action_decoder:
+        if self.freeze_action_encoder and self.freeze_action_decoder:
             return loss, metrics
 
         # Action VAE losses
@@ -184,12 +157,12 @@ class VitaPolicy(BasePolicy):
             loss += self.action_kl_weight * action_kl_loss
 
         # Sample action latents and decode for reconstruction losses
-        if self.config.policy.vita.decode_flow_latents and not self.freeze_action_encoder and not self.frezee_action_decoder:
+        if self.config.policy.vita.decode_flow_latents and not self.freeze_action_encoder and not self.freeze_action_decoder:
             action_latents_pred = self.FM.sample(
                 self.flow_net,
                 shape=(batch_size, self.latent_dim),
                 device=obs_latents.device,
-                start=obs_latents,
+                start=obs_latents, # Use visual latents as the flow source
                 num_steps=self.num_sampling_steps
             )
 
@@ -205,7 +178,7 @@ class VitaPolicy(BasePolicy):
                 loss += self.flow_contrastive_weight * contrastive_loss
                 metrics['flow_contrastive_loss'] = contrastive_loss.item()
 
-            if self.flow_action_recon_weight > 0 and not self.frezee_action_decoder:
+            if self.flow_action_recon_weight > 0 and not self.freeze_action_decoder:
                 actions_recon = self.action_decoder(action_latents_pred)
                 action_recon_loss = self.recon_loss_fn(actions_recon, gt_actions)
                 metrics['flow_action_recon_loss'] = action_recon_loss.item()
@@ -214,7 +187,7 @@ class VitaPolicy(BasePolicy):
             action_latents_pred = action_latents
 
         # Encoder reconstruction losses
-        if self.enc_action_recon_weight > 0 and not self.frezee_action_decoder:
+        if self.enc_action_recon_weight > 0 and not self.freeze_action_decoder:
             actions_recon = self.action_decoder(action_latents)
             action_recon_loss = self.recon_loss_fn(actions_recon, gt_actions)
             metrics['enc_action_recon_loss'] = action_recon_loss.item()
@@ -231,18 +204,16 @@ class VitaPolicy(BasePolicy):
         else:
             obs_latents = self.obs_encoder(obs_features)
 
-        obs_latents = nosify(obs_latents)
-
         action_latents_pred = self.FM.sample(
             self.flow_net,
             (batch_size, self.latent_dim),
             obs_latents.device,
             self.num_sampling_steps,
-            start=obs_latents,
+            start=obs_latents, # Use visual latents as the flow source
             return_traces=False
         )
 
-        with torch.no_grad() if self.frezee_action_decoder else torch.enable_grad():
+        with torch.no_grad() if self.freeze_action_decoder else torch.enable_grad():
             actions_pred = self.action_decoder(action_latents_pred)
 
         return actions_pred
@@ -294,14 +265,12 @@ class VitaPolicy(BasePolicy):
         else:
             obs_latents = self.obs_encoder(obs_feats)
 
-        obs_latents = nosify(obs_latents)
-
         action_latents, (latents_hist, vel_hist) = self.FM.sample(
             self.flow_net,
             shape=(num_samples, self.latent_dim),
             device=device,
             num_steps=self.num_sampling_steps,
-            start=obs_latents,
+            start=obs_latents, # Use visual latents as the flow source
             return_traces=True
         )
 
@@ -326,3 +295,23 @@ class VitaPolicy(BasePolicy):
             viz[f"denoise_{i}"] = fig2
 
         return viz
+
+
+def compute_contrastive_loss(image_features, action_features, temperature=0.07):
+    # Contrastive loss between image and action feautres (InfoNCE)
+    # Can provide an additional boost on top of FLD and FLC
+
+    # Normalize features
+    batch_size = image_features.size(0)
+    image_features = F.normalize(image_features, dim=1)
+    action_features = F.normalize(action_features, dim=1)
+
+    # Compute similarity matrix
+    logits = torch.matmul(image_features, action_features.T) / temperature
+
+    # Symmetric contrastive loss (image-to-action + action-to-image)
+    labels = torch.arange(batch_size, device=logits.device)
+    loss_i2a = F.cross_entropy(logits, labels)
+    loss_a2i = F.cross_entropy(logits.T, labels)
+
+    return (loss_i2a + loss_a2i) / 2

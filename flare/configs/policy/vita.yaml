@@ -14,14 +14,13 @@ policy:
 
   vita:
     decode_flow_latents: true
-    consistency_weight: 1.0
+    consistency_weight: 1.0 # FLC
     enc_contrastive_weight: 1e-4
     flow_contrastive_weight: 0.0
     latent_dim: 512
-    noise_std: 0.0
 
   flow_matcher:
-    name: exact
+    name: exact # OT-CFM
     sigma: 0.0
     num_sampling_steps: 6
 
@@ -42,9 +41,9 @@ policy:
 
   action_ae:
     kl_weight: 1e-6
-    enc_recon_weight: 0.5
-    flow_recon_weight: 0.5
-    recon_loss_type: l1 # or l2
+    enc_recon_weight: 0.5 # AE
+    flow_recon_weight: 0.5 # FLD
+    recon_loss_type: l1 # L1 outperforms L2
     use_variational: false
     freeze_encoder: false
     freeze_decoder: false

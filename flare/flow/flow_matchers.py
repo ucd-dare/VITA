@@ -65,8 +65,9 @@ class TorchFlowMatcher(BaseFlowMatcher):
         dt = 1.0 / num_steps
 
         if return_traces:
-            traj_history = []
-            vel_history = []
+            # Add the initial state
+            traj_history = [x]
+            vel_history = [np.zeros_like(x.cpu())]
 
         for t in range(num_steps):
             timestep = torch.ones(x.shape[0], device=x.device) * (t / num_steps)
