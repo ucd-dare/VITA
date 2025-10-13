@@ -197,7 +197,7 @@ pusht
 * 📑 [PDF](https://arxiv.org/pdf/2507.13231)
 
 We gratefully acknowledge open-source codebases that inspired VITA:
-[AV-ALOHA](https://soltanilara.github.io/av-aloha/), [Robomimic](https://robomimic.github.io/), and [LeRobot](https://github.com/huggingface/lerobot).
+[AV-ALOHA](https://soltanilara.github.io/av-aloha/), [Robomimic](https://robomimic.github.io/), [LeRobot](https://github.com/huggingface/lerobot),  [CrossFlow](https://github.com/qihao067/CrossFlow) ([Qihao Liu](https://qihao067.github.io/))!
 
 ---
 
