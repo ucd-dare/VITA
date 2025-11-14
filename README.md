@@ -23,6 +23,15 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 ---
 
+
+> \[!NOTE\]
+>
+> - **Nov 2025:** We have integrated our `VITA` and Diffusion Transformer implementation into [RoboVerse](https://github.com/RoboVerseOrg/RoboVerse) [PR#580](https://github.com/RoboVerseOrg/RoboVerse/pull/580).
+> - **Oct 2025:** Code released. ArXiv updated to V2.
+> - **July 2025** Paper on ArXiv.
+
+---
+
 ## 🚀 Getting Started
 
 This section covers installation, dataset preprocessing, and training.
