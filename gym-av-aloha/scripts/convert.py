@@ -1,7 +1,7 @@
 # Convert datasets from LeRobot to AV-ALOHA which is MUCH FASTER for training
 # Usage:
 # * Listing all available datasets
-#       python convert.py -ls
+#       python convert.py -l
 # * Converting a single task dataset
 #       python convert.py -r iantc104/av_aloha_sim_thread_needle
 # * Display help message
