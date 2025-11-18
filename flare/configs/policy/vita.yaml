@@ -28,7 +28,6 @@ policy:
     name: simple
     hidden_dim: 512
     num_layers: 4
-    num_heads: 8
     mlp_ratio: 4
     dropout: 0.0
 

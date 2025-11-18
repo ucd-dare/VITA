@@ -19,7 +19,7 @@ class FlowNetLayer(nn.Module):
         )
 
         # Injects timestep t
-        self.ada_ln = nn.Sequential(
+        self.time_modulator = nn.Sequential(
             nn.SiLU(),
             nn.Linear(dim, 3*dim)
         )
@@ -28,12 +28,12 @@ class FlowNetLayer(nn.Module):
         self._init_weights()
 
     def _init_weights(self):
-        nn.init.constant_(self.ada_ln[-1].weight, 0)
-        nn.init.constant_(self.ada_ln[-1].bias, 0)
+        nn.init.constant_(self.time_modulator[-1].weight, 0)
+        nn.init.constant_(self.time_modulator[-1].bias, 0)
 
     def forward(self, x, t):
         B = x.shape[0]
-        features = self.ada_ln(t).view(B, 3, self.dim).unbind(1)
+        features = self.time_modulator(t).view(B, 3, self.dim).unbind(1)
         gamma, scale, shift = features
 
         x_norm = self.norm(x)
@@ -50,7 +50,6 @@ class SimpleFlowNet(nn.Module):
         hidden_dim,
         output_dim,
         num_layers,
-        num_heads,
         mlp_ratio=4.0,
         dropout=0.0,
         time_embed_dim=256,

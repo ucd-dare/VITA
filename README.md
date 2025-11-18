@@ -23,6 +23,15 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 ---
 
+
+> \[!NOTE\]
+>
+> - **Nov 2025:** We have integrated our `VITA` and Diffusion Transformer implementation into [RoboVerse](https://github.com/RoboVerseOrg/RoboVerse) [PR#580](https://github.com/RoboVerseOrg/RoboVerse/pull/580).
+> - **Oct 2025:** Code released. ArXiv updated to V2.
+> - **July 2025** Paper on ArXiv.
+
+---
+
 ## 🚀 Getting Started
 
 This section covers installation, dataset preprocessing, and training.
@@ -197,7 +206,7 @@ pusht
 * 📑 [PDF](https://arxiv.org/pdf/2507.13231)
 
 We gratefully acknowledge open-source codebases that inspired VITA:
-[AV-ALOHA](https://soltanilara.github.io/av-aloha/), [Robomimic](https://robomimic.github.io/), and [LeRobot](https://github.com/huggingface/lerobot).
+[AV-ALOHA](https://soltanilara.github.io/av-aloha/), [Robomimic](https://robomimic.github.io/), [LeRobot](https://github.com/huggingface/lerobot),  [CrossFlow](https://github.com/qihao067/CrossFlow) ([Qihao Liu](https://qihao067.github.io/))!
 
 ---
 
