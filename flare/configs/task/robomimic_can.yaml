@@ -1,8 +1,7 @@
 # @package _global_
 
-# wmil/configs/task/robomimic_square.yaml
 resize_shape: [256, 256]
-crop_shape: [256, 256]
+crop_shape: [224, 224]
 
 task:
   name: robomimic_can
