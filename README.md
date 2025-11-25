@@ -141,7 +141,7 @@ We log: offline validation results, online simulator validation results, as well
 `Example:` in the first row below, VITA produces a structured action trajectory after just one ODE step, while conventional flow matching starts from Gaussian noise and gradually denoises.
 
 <p align="center">
-  <img src=".assets/denoising.png" alt="VITA denoising" />
+  <img src="https://raw.githubusercontent.com/ucd-dare/VITA/refs/heads/gh-pages/static/images/denoising.png" alt="VITA denoising" />
 </p>
 
 ---
