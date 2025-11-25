@@ -842,8 +842,8 @@
                             </button>
                         </div>
                     </div>
-                </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -924,16 +924,87 @@
                             Comparison of the denoising process between conventional flow matching and VITA.
                             Conventional flow matching denoises random Gaussian into actions, VITA
                             flows from latent images to latent actions, and generated actions at initial steps are more structured.
+                            <b>We found that through VITA learning, latent images manifest action semantics. The latent image can decoded into a smooth trajectory, and progressively refined by the ODE process.</b>
                         </p>
                     </div>
 
-                    <img src="https://raw.githubusercontent.com/ucd-dare/VITA/refs/heads/main/.assets/denoising.png" class="interpolation-image" />
+                    <img src="static/images/denoising.png" class="interpolation-image" />
                     <br />
                     <br />
                 </div>
             </div>
         </div>
     </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Addressing Latent Collapse of E2E Latent Flow Matching Training</h2>
+
+                    <div class="content has-text-justified">
+                        <p>
+                            Unlike latent diffusion for image generation, where the target latent space can be trainied via abundant image data,
+                            action data is sparse and limited and thus the target latent space is hard to be well pre-trained and frozen as the target for flow matching.
+                            Naively end-to-end training flow matching along with the target latent space leads to latent collapse (Figure (a) Left).
+                            We first time identify the cause of the issue as the training-test time gap between encoder-based latents and ODE-generated latents.
+                            We propose <b>flow latent decoding (FLD)</b>, to backpropagate through the flow ODE solver during training, to close the gap by anchoring latent representations using ground-truth targets.
+                        </p>
+                    </div>
+
+                    <img src="static/images/latent_collapase.png" class="interpolation-image" />
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Efficiency</h2>
+                    <img src="static/images/efficiency.png" class="interpolation-image" />
+                    <br />
+                    <br />
+
+                    <div class="content has-text-justified">
+                        <p>
+                            The table compares the inference latency and peak memory usage of different flow matching policies
+                            when using vector-based (Vector) representations or grid-based representations (Grid) for visual features.
+                            VITA achieves 1.5x to 2x faster inference speed and reduces memory usage by 18.6% to 28.7%.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Success Rates</h2>
+                    <img src="static/images/perf.png" class="interpolation-image" />
+                    <br />
+                    <br />
+
+                    <div class="content has-text-justified">
+                        <p>
+                            We evaluate VITA on challenging bi-manual manipulation tasks, and single-arm tasks
+                            including 9 simulation and 2 real-world tasks on ALOHA, Robomimic, etc. The <b>MLP-only VITA</b>
+                            consistently outperforms or matches state-of-the-art 
+                            policies (including transformer-based conventional flow matching
+                            policy), while being significantly more efficient.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Real-World Tasks -->
     <section class="hero is-small">
@@ -1041,29 +1112,6 @@
         </div>
     </section>
 
-    <section class="section hero is-light">
-        <div class="container is-max-widescreen">
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-full-width">
-                    <h2 class="title is-3">Results</h2>
-                    <img src="static/images/perf.png" class="interpolation-image" />
-                    <br />
-                    <br />
-
-                    <div class="content has-text-justified">
-                        <p>
-                            We evaluate VITA on challenging bi-manual manipulation tasks on
-                            ALOHA, including 5 simulation and 2 real-world tasks. VITA
-                            consistently outperforms or matches state-of-the-art generative
-                            policies (including transformer-based conventional flow matching
-                            policy), while being significantly more efficient with
-                            conditioning-free MLP-only architectures.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
 
     <!--BibTex citation -->
