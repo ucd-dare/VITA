@@ -857,7 +857,7 @@
                         <p>
                             We present VITA, a VIsion-To-Action flow matching policy that
                             evolves latent visual representations into latent actions via
-                            flow matching for visuomotor control. Traditional flow matching
+                            flow matching for visuomotor control. Conventional flow matching
                             and diffusion policies face a fundamental inefficiency: they
                             sample from standard source distributions (e.g., Gaussian noise)
                             and then require additional conditioning mechanisms, such as
@@ -865,21 +865,16 @@
                             information, incurring time and space overheads.
                             <span class="highlight-bold">We propose VITA, a novel paradigm that treats latent images
                                 as the source of the flow, and learns an inherent mapping from
-                                vision to action. VITA eliminates the need for separate
-                                conditioning modules, while preserving the generative modeling
-                                capabilities.
+                                vision to action. Because the source of the flow is visually grounded,
+                                VITA eliminates the need for repeated conditioning during generation.
                             </span>
-                            We implement VITA as simple MLP layers, and evaluate VITA on
-                            challenging bi-manual manipulation tasks on the ALOHA platform,
-                            including 5 simulation and 2 real-world tasks. Despite its
-                            simplicity, MLP-only VITA outperforms or matches
-                            state-of-the-art generative policies, while reducing inference
-                            latency by 50% to 130% compared to conventional flow matching
-                            policies requiring different conditioning mechanisms or complex
-                            architectures. To our knowledge, VITA is the first
+                            VITA inherently enables simpler architectures such as MLPs. We evaluate MLP-only VITA
+                            on 9 simulation and 5 real-world tasks from ALOHA and Robomimic.
+                            Despite its simplicity, VITA outperforms or matches
+                            state-of-the-art policies, while speeding up inference
+                            by 1.5x to 2.3x. To our knowledge, VITA is the first
                             <span class="highlight-bold">MLP-only flow matching policy capable of solving complex
-                                bi-manual manipulation tasks like those in ALOHA
-                                benchmarks.</span>
+                                bi-manual manipulation tasks like those in ALOHA benchmarks.</span>
                         </p>
                     </div>
                 </div>
@@ -903,7 +898,8 @@
                             VITA learns a continuous flow from latent visual representations
                             to latent actions without requiring additional conditioning
                             mechanisms. By leveraging compact 1D visual and action latent
-                            spaces, VITA enables a highly efficient MLP-only architecture
+                            spaces, VITA reduces flow matching to a conditioning-free vector-to-vector mapping,
+                            allowing for the use of an MLP-only architecture
                             while achieving strong performance across both simulation and
                             real-world visuomotor tasks.
                         </p>
@@ -994,8 +990,8 @@
                     <div class="content has-text-justified">
                         <p>
                             We evaluate VITA on challenging bi-manual manipulation tasks, and single-arm tasks
-                            including 9 simulation and 2 real-world tasks on ALOHA, Robomimic, etc. The <b>MLP-only VITA</b>
-                            consistently outperforms or matches state-of-the-art 
+                            including 9 simulation and 5 real-world tasks on ALOHA, AV-ALOHA, Robomimic, covering bimnual and single-arm manipulation tasks.
+                            The <b>MLP-only VITA</b> consistently outperforms or matches state-of-the-art 
                             policies (including transformer-based conventional flow matching
                             policy), while being significantly more efficient.
                         </p>
@@ -1011,53 +1007,114 @@
         <div class="hero-body">
             <div class="container">
                 <h2 class="title is-3">
-                    Autonomous Rollouts of VITA: Real-World Tasks
+                    VITA Demos: Real-World Tasks
                 </h2>
 
                 <!-- Phone Camera Views (First Row) -->
-                <h3 class="title is-4">Third-Person Views</h3>
-                <div class="columns is-centered">
-                    <div class="column is-half">
-                        <video poster="" autoplay controls muted loop height="100%">
-                            <source src="static/videos/hidden_pick.mp4" type="video/mp4" />
-                        </video>
-                        <h4 class="subtitle has-text-centered">Hidden Pick Task</h4>
+                    <div class="columns is-centered">
+                        <div class="column is-half">
+                        <div class="content has-text-justified">
+                            <h2 class="title is-3" align="left">
+                                VITA demonstrates robustness to online perturbations.
+                            </h2>
+                        </div>
+                            <video poster="" autoplay controls muted loop height="100%">
+                                <source src="static/videos/online_perturb.mp4" type="video/mp4" />
+                            </video>
+                            <h4 class="subtitle has-text-centered">Online Perturbations</h4>
+                        </div>
+                        <div class="column is-half">
+                    <div class="content has-text-justified">
+                        <h2 class="title is-3" align="left">
+                            VITA demonstrates generalization to unseen objects.
+                        </h2>
                     </div>
-                    <div class="column is-half">
-                        <video poster="" autoplay controls muted loop height="100%">
-                            <source src="static/videos/transfer_from_box.mp4" type="video/mp4" />
-                        </video>
-                        <h4 class="subtitle has-text-centered">Transfer From Box Task</h4>
+                            <video poster="" autoplay controls muted loop height="100%">
+                                <source src="static/videos/unseen_object.mp4" type="video/mp4" />
+                            </video>
+                            <h4 class="subtitle has-text-centered">Unseen Objects</h4>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Robot Active Vision Views (Second Row) -->
-                <h3 class="title is-4">Robot Active Vision Views</h3>
+
+
+
+
+                <h2 class="title is-3">Bimanual Tasks with Active Vision</h2>
+                    <p>
+                        Two challenging bimanual manipulation tasks on <a href="https://soltanilara.github.io/av-aloha/" target="_blank" rel="noopener noreferrer">AV-ALOHA</a> with
+                        an additional 7-DoF arm carrying an active vision camera. The robot must predict and reach the
+                        best viewpoint to avoid occulusions and increase precision.
+                    </p>
                 <div class="columns is-centered">
                     <div class="column is-half">
                         <video poster="" autoplay controls muted loop height="100%">
                             <source src="static/videos/hidden_pick_active.mp4" type="video/mp4" />
                         </video>
-                        <h4 class="subtitle has-text-centered">Hidden Pick Task</h4>
+                        <h4 class="subtitle has-text-centered">Hidden Pick</h4>
                     </div>
                     <div class="column is-half">
                         <video poster="" autoplay controls muted loop height="100%">
                             <source src="static/videos/transfer_from_box_active.mp4" type="video/mp4" />
                         </video>
-                        <h4 class="subtitle has-text-centered">Transfer From Box Task</h4>
+                        <h4 class="subtitle has-text-centered">Transfer From Box</h4>
                     </div>
                 </div>
-            </div>
+                </div>
         </div>
     </section>
 
-    <!-- Simulation Tasks -->
+    <!-- Tasks -->
     <section class="hero is-small is-light">
         <div class="hero-body">
             <div class="container">
                 <h2 class="title is-3">
-                    Autonomous Rollouts of VITA: Simulation Tasks
+                    VITA Demos: Real-World and Simulation Tasks
                 </h2>
+
+                <!-- Third Row of Videos -->
+                <div class="columns is-centered">
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/hidden_pick.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Hidden Pick</h4>
+                    </div>
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/transfer_from_box.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Transfer From Box</h4>
+                    </div>
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/toothbrush.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </div>
+
+                <!-- Third Row of Videos -->
+                <div class="columns is-centered">
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/pick_ball.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Pick Ball</h4>
+                    </div>
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/store_drawer.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Store Drawer</h4>
+                    </div>
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop width="100%"
+                            style="aspect-ratio: 16/9; object-fit: cover">
+                            <source src="static/videos/thread_needle.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Thread Needle</h4>
+                    </div>
+                </div>
 
                 <!-- First Row of Simulation Videos -->
                 <div class="columns is-centered">
@@ -1071,16 +1128,16 @@
                     <div class="column is-one-third">
                         <video poster="" autoplay controls muted loop width="100%"
                             style="aspect-ratio: 16/9; object-fit: cover">
-                            <source src="static/videos/thread_needle.mp4" type="video/mp4" />
+                            <source src="static/videos/hook_package.mp4" type="video/mp4" />
                         </video>
-                        <h4 class="subtitle has-text-centered">Thread Needle</h4>
+                        <h4 class="subtitle has-text-centered">Hook Package</h4>
                     </div>
                     <div class="column is-one-third">
                         <video poster="" autoplay controls muted loop width="100%"
                             style="aspect-ratio: 16/9; object-fit: cover">
-                            <source src="static/videos/hook_package.mp4" type="video/mp4" />
+                            <source src="static/videos/slot_insertion.mp4" type="video/mp4" />
                         </video>
-                        <h4 class="subtitle has-text-centered">Hook Package</h4>
+                        <h4 class="subtitle has-text-centered">Slot Insertion</h4>
                     </div>
                 </div>
 
@@ -1089,16 +1146,15 @@
                     <div class="column is-one-third">
                         <video poster="" autoplay controls muted loop width="100%"
                             style="aspect-ratio: 16/9; object-fit: cover">
-                            <source src="static/videos/slot_insertion.mp4" type="video/mp4" />
-                        </video>
-                        <h4 class="subtitle has-text-centered">Slot Insertion</h4>
-                    </div>
-                    <div class="column is-one-third">
-                        <video poster="" autoplay controls muted loop width="100%"
-                            style="aspect-ratio: 16/9; object-fit: cover">
                             <source src="static/videos/transfer_cube.mp4" type="video/mp4" />
                         </video>
                         <h4 class="subtitle has-text-centered">Transfer Cube</h4>
+                    </div>
+                    <div class="column is-one-third">
+                        <video poster="" autoplay controls muted loop height="100%">
+                            <source src="static/videos/square.mp4" type="video/mp4" />
+                        </video>
+                        <h4 class="subtitle has-text-centered">Square</h4>
                     </div>
                     <div class="column is-one-third">
                         <video poster="" autoplay controls muted loop width="100%"
@@ -1108,6 +1164,7 @@
                         <h4 class="subtitle has-text-centered">PushT</h4>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
