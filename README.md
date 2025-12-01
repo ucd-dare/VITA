@@ -25,7 +25,7 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 
 > \[!NOTE\]
->
+> - **Dec 2025** ArXiv updated to V3 which includes several new real-world tasks and more discussions.
 > - **Nov 2025:** We have integrated our `VITA` and Diffusion Transformer implementation into [RoboVerse](https://github.com/RoboVerseOrg/RoboVerse) [PR#580](https://github.com/RoboVerseOrg/RoboVerse/pull/580).
 > - **Oct 2025:** Code released. ArXiv updated to V2.
 > - **July 2025** Paper on ArXiv.
@@ -104,7 +104,6 @@ As of Sept 2025, available datasets include:
 - iantc104/av_aloha_sim_pour_test_tube
 - iantc104/av_aloha_sim_slot_insertion
 - iantc104/av_aloha_sim_hook_package
-- iantc104/robomimic_sim_transport
 - iantc104/robomimic_sim_square
 - iantc104/robomimic_sim_can
 - lerobot/pusht
@@ -113,7 +112,18 @@ As of Sept 2025, available datasets include:
 Convert a HuggingFace dataset (conversion may take >10 minutes) to offline zarr datasets. For example:
 
 ```bash
+# Replace the dataset flag to use other tasks...
+
+# AV-ALOHA
+python convert.py -r iantc104/av_aloha_sim_thread_needle
+python convert.py -r iantc104/av_aloha_sim_cube_transfer
 python convert.py -r iantc104/av_aloha_sim_hook_package
+...
+
+# Robomimic
+python convert.py -r  iantc104/robomimic_sim_square
+python convert.py -r iantc104/robomimic_sim_can
+...
 ```
 
 Datasets will be stored in `./gym-av-aloha/outputs`.
