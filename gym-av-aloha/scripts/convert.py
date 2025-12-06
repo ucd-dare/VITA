@@ -64,11 +64,6 @@ DATASET_CONFIGS = {
         "image_size": (240, 320),
     },
     # robomimic tasks
-    "iantc104/robomimic_sim_transport": {
-        "episodes": list(range(0, 163)),
-        "remove_keys": ["observation.images.robot0_eye_in_hand"],
-        "image_size": (256, 256),
-    },
     "iantc104/robomimic_sim_square": {
         "episodes": list(range(0, 174)),
         "remove_keys": ["observation.images.robot0_eye_in_hand"],
