@@ -369,13 +369,6 @@ def get_autoencoder(config, network_config):
         raise ValueError(f"Unknown encoder type: {encoder_type}")
 
     if decoder_type == 'simple':
-        # decoder = SimpleActionDecoder_(
-        #     latent_dim=latent_dim,
-        #     pred_horizon=pred_horizon,
-        #     action_dim=action_dim,
-        #     num_layers=net_config.num_layers,
-        #     use_attention=net_config.get('use_attention', False),
-        # )
         decoder = SimpleActionDecoder(
             dec_hidden_dim=net_config.dec_hidden_dim,
             latent_dim=latent_dim,

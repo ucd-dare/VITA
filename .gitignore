@@ -31,6 +31,8 @@ share/python-wheels/
 MANIFEST
 .venv
 tmp*
+.DS_Store
 
 visualizations/*
 robomimic/
+.vscode/

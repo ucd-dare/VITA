@@ -1,7 +1,7 @@
 # Convert datasets from LeRobot to AV-ALOHA which is MUCH FASTER for training
 # Usage:
 # * Listing all available datasets
-#       python convert.py -ls
+#       python convert.py -l
 # * Converting a single task dataset
 #       python convert.py -r iantc104/av_aloha_sim_thread_needle
 # * Display help message
@@ -64,11 +64,6 @@ DATASET_CONFIGS = {
         "image_size": (240, 320),
     },
     # robomimic tasks
-    "iantc104/robomimic_sim_transport": {
-        "episodes": list(range(0, 163)),
-        "remove_keys": ["observation.images.robot0_eye_in_hand"],
-        "image_size": (256, 256),
-    },
     "iantc104/robomimic_sim_square": {
         "episodes": list(range(0, 174)),
         "remove_keys": ["observation.images.robot0_eye_in_hand"],

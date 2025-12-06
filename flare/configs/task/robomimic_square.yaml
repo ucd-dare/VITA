@@ -1,11 +1,10 @@
 # @package _global_
 
-# wmil/configs/task/robomimic_square.yaml
 resize_shape: [256, 256]
-crop_shape: [256, 256]
+crop_shape: [224, 224]
 
 task:
-  name: robomimic_can
+  name: robomimic_square
   dataset_repo_id: iantc104/robomimic_sim_square
   dataset_root: ${oc.env:FLARE_DATASETS_DIR}/iantc104/robomimic_sim_square
   dataset_episodes: null
@@ -13,25 +12,14 @@ task:
     observation.images.agentview_image:
       mean: [[[0.485]], [[0.456]], [[0.406]]]
       std: [[[0.229]], [[0.224]], [[0.225]]]
-    # observation.images.robot0_eye_in_hand:
-    #   mean: [[[0.485]], [[0.456]], [[0.406]]]
-    #   std: [[[0.229]], [[0.224]], [[0.225]]]
 
   env_package: gym_robomimic
-  env_name: square-v0 #deleted the prefix "gym_robomimic/"
+  env_name: square-v0
   env_kwargs:
     max_episode_steps: 400
-  #   fps: 20
-  #   shift_wrist_camera: true
-  #   eval_n_episodes: 20
-  #   eval_n_envs: 5
-  #   eval_options:
-  #     iid:
-  #       prompt: "pick up the red cube"
 
   fps: 20 # <<< Robomimic is 20 FPS
   image_keys: [observation.images.agentview_image]
-              # observation.images.robot0_eye_in_hand
 
   state_key: observation.state
   action_key: action

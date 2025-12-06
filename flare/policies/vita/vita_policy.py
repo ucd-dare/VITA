@@ -42,12 +42,9 @@ class VitaPolicy(BasePolicy):
             resize_shape=config.resize_shape,
             crop_shape=config.crop_shape,
             state_dim=config.task.state_dim,
-            tokenize=config.policy.observer.tokenize,
+            tokenize=False,
         )
-        if config.policy.observer.tokenize:
-            self.obs_dim = 512
-        else:
-            self.obs_dim = len(self.config.task.image_keys) * 512 + self.config.task.state_dim
+        self.obs_dim = len(self.config.task.image_keys) * 512 + self.config.task.state_dim
 
         self.FM = get_flow_matcher(**config.policy.flow_matcher)
 
@@ -69,7 +66,6 @@ class VitaPolicy(BasePolicy):
         else:
             raise ValueError(f"Unsupported recon_loss_type: {recon_loss_type}. Use 'l1' or 'l2'.")
 
-        self.use_vision_token = False  # TODO: use vision tokens
         self.use_obs_vae = config.policy.obs_ae.use_variational
         self.obs_kl_weight = config.policy.obs_ae.kl_weight
         self.enc_contrastive_weight = config.policy.vita.enc_contrastive_weight
@@ -88,9 +84,8 @@ class VitaPolicy(BasePolicy):
             hidden_dim=config.policy.flow_net.hidden_dim,
             output_dim=self.latent_dim,
             num_layers=config.policy.flow_net.num_layers,
-            num_heads=config.policy.flow_net.num_heads,
-            mlp_ratio=config.policy.flow_net.get('mlp_ratio', 4.0),
-            dropout=config.policy.flow_net.get('dropout', 0.0),
+            mlp_ratio=config.policy.flow_net.mlp_ratio,
+            dropout=config.policy.flow_net.dropout,
         )
 
         self.reset()
