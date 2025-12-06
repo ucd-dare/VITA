@@ -39,7 +39,7 @@ policy:
     num_layers: 1
 
   action_ae:
-    kl_weight: 1e-6
+    kl_weight: 0.0
     enc_recon_weight: 0.5 # AE
     flow_recon_weight: 0.5 # FLD
     recon_loss_type: l1 # L1 outperforms L2
