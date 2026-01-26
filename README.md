@@ -4,11 +4,14 @@
 
 # 🌊 VITA: Vision-to-Action Flow Matching Policy
 
-This repository provides the official implementation of the paper **VITA: Vision-to-Action Flow Matching Policy** (July 2025).
+This repository provides the official implementation of the paper **VITA: Vision-to-Action Flow Matching Policy** (ICLR 2026).
 
 **VITA** is a **noise-free, conditioning-free** policy learning framework that learns visuomotor policies by directly mapping latent images to latent actions.
 
+> **✨ Accepted to ICLR 2026!**
+
 <p align="center">
+  <img src="https://img.shields.io/badge/ICLR-2026-5B5EA6.svg" alt="ICLR 2026">
   <a href="https://ucd-dare.github.io/VITA/"><img src="https://img.shields.io/badge/Project%20Page-%F0%9F%94%8D-blue" alt="Project Page"></a>
   <a href="https://arxiv.org/abs/2507.13231"><img src="https://img.shields.io/badge/arXiv-2507.13231-b31b1b.svg" alt="arXiv"></a>
   <a href="https://arxiv.org/pdf/2507.13231"><img src="https://img.shields.io/badge/PDF-%F0%9F%93%84-blue" alt="PDF"></a>
@@ -25,6 +28,7 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 
 > \[!NOTE\]
+> - **Jan 2026** Accepted to ICLR 2026.
 > - **Dec 2025** ArXiv updated to V3 which includes several new real-world tasks and more discussions.
 > - **Nov 2025:** We have integrated our `VITA` and Diffusion Transformer implementation into [RoboVerse](https://github.com/RoboVerseOrg/RoboVerse) [PR#580](https://github.com/RoboVerseOrg/RoboVerse/pull/580).
 > - **Oct 2025:** Code released. ArXiv updated to V2.
