@@ -48,19 +48,25 @@ This section covers installation, dataset preprocessing, and training.
 
 ### 🔧 Setup
 
+
+> \[!IMPORTANT\]
+> - Certain package versions may degrade model performance for precision or other issues.
+> - Therefore, please make sure to follow `requirements.txt`.
+
 ```bash
 git clone git@github.com:ucd-dare/VITA.git
 cd VITA
 conda create --name vita python==3.10
 conda activate vita
 conda install cmake
-pip install -e .
-pip install -r requirements.txt
 # Install LeRobot dependencies
 cd lerobot
 pip install -e .
 # Install ffmpeg for dataset processing
 conda install -c conda-forge ffmpeg
+# Install VITA
+pip install -e .
+pip install -r requirements.txt
 ```
 
 Set the dataset storage path:

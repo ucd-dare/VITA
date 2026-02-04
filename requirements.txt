@@ -1,5 +1,5 @@
-torch
-torchvision
+torch==2.9.1
+torchvision==0.24.1
 hydra-core
 omegaconf
 rich
@@ -7,7 +7,7 @@ moviepy==1.0.3
 imageio
 ffmpeg
 huggingface-hub[hf-transfer,cli]
-gymnasium
+gymnasium==0.29.1
 flask
 datasets==3.3.2
 gdown
@@ -15,11 +15,12 @@ einops
 diffusers
 wandb
 av
-pymunk
+pymunk==6.11.1
 zarr
 robomimic
 mujoco==3.3.0
 dm_control==1.0.28
 fvcore
 torchcfm==1.0.5
+numpy==1.26.4
 timm

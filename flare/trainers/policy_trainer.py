@@ -101,13 +101,12 @@ class PolicyTrainer:
         return output_dict
 
     def validate_offline(self):
-        val_dataloader = self.train_dataloader
         self.network.eval()
         val_metrics = defaultdict(float)
         num_samples = 0
 
         with torch.no_grad():
-            for batch_idx, batch in enumerate(val_dataloader):
+            for batch_idx, batch in enumerate(self.val_dataloader):
                 for key in batch:
                     if isinstance(batch[key], torch.Tensor):
                         batch[key] = batch[key].to(self.device, non_blocking=True)
