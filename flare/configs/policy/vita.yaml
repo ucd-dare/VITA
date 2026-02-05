@@ -15,7 +15,7 @@ policy:
   vita:
     decode_flow_latents: true
     consistency_weight: 1.0 # FLC
-    enc_contrastive_weight: 0.0 # or 1e-4
+    enc_contrastive_weight: 1e-4 # or 0.0
     flow_contrastive_weight: 0.0
     latent_dim: 512
 
