@@ -4,6 +4,8 @@ import glob
 import logging
 from pathlib import Path
 
+import torch
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +36,7 @@ def get_latest_checkpoint(checkpoint_dir):
     return latest_dir
 
 
-def get_best_checkpoint(checkpoint_dir, best_name="best_success_rate"):
+def get_best_checkpoint(checkpoint_dir, best_name="best"):
     """Get best checkpoint directory."""
     checkpoint_dir = Path(checkpoint_dir)
 
@@ -44,12 +46,11 @@ def get_best_checkpoint(checkpoint_dir, best_name="best_success_rate"):
         best_dirs = list(checkpoint_dir.glob("best_*"))
         if not best_dirs:
             return None
-        # Prioritize success_rate, then score, then most recent
-        for priority in ["best_success_rate", "best_score", "best_reward"]:
+        for priority in ["best_pc_success", "avg_max_reward"]:
             for best_dir in best_dirs:
                 if priority in best_dir.name:
                     return best_dir
-        return best_dirs[0]  # Return first found if no priority match
+        return best_dirs[0]
     else:
         best_dir = checkpoint_dir / best_name
         return best_dir if best_dir.exists() else None
@@ -115,3 +116,38 @@ def get_checkpoint_paths(checkpoint_dir, pattern):
         valid_paths.append(ckpt_path)
 
     return valid_paths
+
+
+def load_model_weights(model, checkpoint_dir, device):
+    """Load model weights from a checkpoint directory into an existing model."""
+    checkpoint_dir = Path(checkpoint_dir)
+    if not checkpoint_dir.exists():
+        raise FileNotFoundError(f"Checkpoint directory not found: {checkpoint_dir}")
+
+    safetensors_path = checkpoint_dir / "model.safetensors"
+    pytorch_path = checkpoint_dir / "pytorch_model.bin"
+
+    state_dict = None
+    if safetensors_path.exists():
+        try:
+            from safetensors.torch import load_file
+        except Exception as e:
+            raise ImportError(
+                "safetensors is required to load model.safetensors"
+            ) from e
+        state_dict = load_file(str(safetensors_path))
+    elif pytorch_path.exists():
+        state_dict = torch.load(pytorch_path, map_location=device)
+    else:
+        raise FileNotFoundError(
+            f"No model weights found in {checkpoint_dir} (expected model.safetensors or pytorch_model.bin)"
+        )
+
+    missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
+    if missing_keys or unexpected_keys:
+        logger.warning(
+            "Loaded checkpoint with missing/unexpected keys. "
+            f"Missing: {missing_keys} | Unexpected: {unexpected_keys}"
+        )
+
+    return model

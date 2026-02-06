@@ -64,6 +64,6 @@ wandb:
   group: ${policy.name}
   tags:
     - ${policy.name}
-    - ${policy.trainer}
+    - ${policy.runner}
     - ${policy.flow_matcher.name}
   upload_checkpoints: false
