@@ -7,12 +7,13 @@ from flare.factory import registry
 from flare.utils.logger import FlareLogger
 from flare.utils.dataset_utils import cycle
 from flare.utils.logging_utils import AverageMeter, MetricsTracker
-from flare.eval import eval_policy
+from flare.utils.eval import eval_policy
+from flare.utils.checkpoints import load_model_weights
 
 logger = logging.getLogger(__name__)
 
 
-@registry.register_trainer("policy")
+@registry.register_runner("policy_trainer")
 class PolicyTrainer:
     def __init__(
         self,
@@ -284,12 +285,17 @@ class PolicyTrainer:
         if not training_state_file.exists():
             raise FileNotFoundError(f"Training state file not found: {training_state_file}")
 
-        # Load network
-        self.network = self.network.from_pretrained(checkpoint_dir)
+        # Load network weights into existing instance
+        load_model_weights(self.network, checkpoint_dir, self.device)
         self.network.to(self.device)
 
         # Load training state
-        training_state = torch.load(training_state_file, map_location=self.device)
+        # training_state may include OmegaConf objects; allow full unpickling from trusted checkpoints
+        training_state = torch.load(
+            training_state_file,
+            map_location=self.device,
+            weights_only=False
+        )
         self.optimizer.load_state_dict(training_state["optimizer"])
 
         if self.lr_scheduler and training_state.get("lr_scheduler"):

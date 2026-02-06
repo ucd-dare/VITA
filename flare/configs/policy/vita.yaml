@@ -2,7 +2,7 @@
 
 policy:
   name: vita
-  trainer: policy
+  runner: policy_trainer
 
   action_horizon: 8
   pred_horizon: 16
@@ -15,7 +15,7 @@ policy:
   vita:
     decode_flow_latents: true
     consistency_weight: 1.0 # FLC
-    enc_contrastive_weight: 1e-4 # or 0.0
+    enc_contrastive_weight: 0.0
     flow_contrastive_weight: 0.0
     latent_dim: 512
 
@@ -32,8 +32,6 @@ policy:
     dropout: 0.0
 
   obs_ae:
-    use_variational: false
-    kl_weight: 0.0
     recon_weight: 0.0
     hidden_dim: 512
     num_layers: 1

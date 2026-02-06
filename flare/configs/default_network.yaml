@@ -60,5 +60,5 @@ wandb:
   group: ${network.name}
   tags:
     - ${network.name}
-    - ${network.trainer}
+    - ${network.runner}
   upload_checkpoints: false

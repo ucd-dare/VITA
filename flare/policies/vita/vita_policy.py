@@ -66,8 +66,6 @@ class VitaPolicy(BasePolicy):
         else:
             raise ValueError(f"Unsupported recon_loss_type: {recon_loss_type}. Use 'l1' or 'l2'.")
 
-        self.use_obs_vae = config.policy.obs_ae.use_variational
-        self.obs_kl_weight = config.policy.obs_ae.kl_weight
         self.enc_contrastive_weight = config.policy.vita.enc_contrastive_weight
         self.flow_contrastive_weight = config.policy.vita.flow_contrastive_weight
 
@@ -103,11 +101,7 @@ class VitaPolicy(BasePolicy):
 
     def compute_loss(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
         obs_features = self.observer(batch)
-        if self.use_obs_vae:
-            obs_posterior, obs_latents = self.obs_encoder(obs_features, deterministic=not self.training)
-        else:
-            obs_latents = self.obs_encoder(obs_features)
-            obs_posterior = None
+        obs_latents = self.obs_encoder(obs_features)
 
         batch_size = obs_features.shape[0]
         gt_actions = batch[self.config.task.action_key]
@@ -126,12 +120,6 @@ class VitaPolicy(BasePolicy):
         )
         loss = flow_loss
         metrics['flow_loss'] = flow_loss.item()
-
-        # Observation VAE losses
-        if obs_posterior is not None and self.obs_kl_weight > 0:
-            obs_kl_loss = obs_posterior.kl().mean()
-            loss += self.obs_kl_weight * obs_kl_loss
-            metrics['obs_kl_loss'] = obs_kl_loss.item()
 
         if self.enc_contrastive_weight > 0:
             image_features = obs_latents.view(batch_size, -1)
@@ -193,11 +181,7 @@ class VitaPolicy(BasePolicy):
     def generate_actions(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
         batch_size = batch[self.config.task.state_key].shape[0]
         obs_features = self.observer(batch)
-
-        if self.use_obs_vae:
-            obs_posterior, obs_latents = self.obs_encoder(obs_features, deterministic=True)
-        else:
-            obs_latents = self.obs_encoder(obs_features)
+        obs_latents = self.obs_encoder(obs_features)
 
         action_latents_pred = self.FM.sample(
             self.flow_net,
@@ -255,10 +239,7 @@ class VitaPolicy(BasePolicy):
         gt = batch[self.config.task.action_key]
 
         obs_feats = self.observer(batch)
-        if self.config.policy.obs_ae.use_variational:
-            obs_posterior, obs_latents = self.obs_encoder(obs_feats, deterministic=True)
-        else:
-            obs_latents = self.obs_encoder(obs_feats)
+        obs_latents = self.obs_encoder(obs_feats)
 
         action_latents, (latents_hist, vel_hist) = self.FM.sample(
             self.flow_net,

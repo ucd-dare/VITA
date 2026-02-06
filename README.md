@@ -50,8 +50,7 @@ This section covers installation, dataset preprocessing, and training.
 
 
 > \[!IMPORTANT\]
-> - Certain package versions may degrade model performance for precision or other issues.
-> - Therefore, please make sure to follow `requirements.txt`.
+> - Certain package versions may degrade model performance for precision or other issues. We will release a new conda environment setup shortly!
 
 ```bash
 git clone git@github.com:ucd-dare/VITA.git

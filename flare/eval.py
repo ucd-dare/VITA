@@ -1,348 +1,102 @@
-import threading
-import time
-import einops
-import gymnasium as gym
-import numpy as np
 import torch
-from torch import Tensor, nn
-from tqdm import trange
-from copy import deepcopy
+import hydra
+import logging
+import random
+import numpy as np
 from pathlib import Path
-from typing import Callable
+from datetime import datetime
+from omegaconf import DictConfig, OmegaConf
 
-from flare.utils.policy_utils import get_device_from_parameters, preprocess_observation
-from flare.utils.utils import (
-    inside_slurm,
-    write_video,
-)
+from flare.factory import get_policy_class
+from flare.runners.policy_evaluator import PolicyEvaluator
+from flare.utils.dataset_utils import create_dataloader, create_dataset, create_dataset_stats
+from flare.utils.checkpoints import get_best_checkpoint, get_latest_checkpoint
+from flare.utils.eval import create_eval_env
+from flare.utils.logger import setup_logging
 
 
-def rollout(
-    env: gym.vector.VectorEnv,
-    policy,
-    seeds: list[int] | None = None,
-    return_observations: bool = False,
-    render_callback: Callable[[gym.vector.VectorEnv], None] | None = None,
-) -> dict:
-    assert isinstance(policy, nn.Module), "Policy must be a PyTorch nn module."
-    device = get_device_from_parameters(policy)
+logger = logging.getLogger(__name__)
 
-    # Reset the policy and environments.
-    policy.reset()
 
-    observation, info = env.reset(seed=seeds)
-    if render_callback is not None:
-        render_callback(env)
+@hydra.main(config_path="configs", config_name="default_policy", version_base="1.3")
+def evaluate(cfg: DictConfig):
 
-    all_observations = []
-    all_actions = []
-    all_rewards = []
-    all_successes = []
-    all_dones = []
+    # Setup
+    setup_logging(save_dir=cfg.log_dir, log_file="eval.log", debug=cfg.debug)
+    logger.info("Starting evaluation...")
+    logger.info(f"Using policy: {cfg.policy.name}")
 
-    step = 0
-    # Keep track of which environments are done.
-    done = np.array([False] * env.num_envs)
-    max_steps = env.call("_max_episode_steps")[0]
-    progbar = trange(
-        max_steps,
-        desc=f"Running rollout with at most {max_steps} steps",
-        disable=inside_slurm(),  # we dont want progress bar when we use slurm, since it clutters the logs
-        leave=False,
+    if cfg.checkpoint_path:
+        logger.info(f"Searching for the specified checkpoint path: {cfg.checkpoint_path}")
+        checkpoint_path = Path(cfg.checkpoint_path)
+    else:
+        logger.info(f"Searching for best checkpoint in {cfg.checkpoint_dir}")
+        checkpoint_path = get_best_checkpoint(cfg.checkpoint_dir)
+        if checkpoint_path is None:
+            logger.info(f"Searching for latest checkpoint in {cfg.checkpoint_dir}")
+            checkpoint_path = get_latest_checkpoint(cfg.checkpoint_dir)
+    if checkpoint_path is None:
+        logger.warning(f"No checkpoint found")
+        return
+
+    # Set seeds
+    np.random.seed(cfg.seed)
+    random.seed(cfg.seed)
+    torch.manual_seed(cfg.seed)
+    torch.cuda.manual_seed_all(cfg.seed)
+
+    # Create directories and save config
+    Path(cfg.log_dir).mkdir(parents=True, exist_ok=True)
+    time_str = datetime.now().strftime("%Y%m%d%H%M")
+    OmegaConf.save(config=cfg, f=cfg.log_dir / Path(f"eval_config_{time_str}.yaml"))
+
+    logger.info(f"Configuration:\n{OmegaConf.to_yaml(cfg)}")
+
+    # Create dataset stats
+    dataset_meta, stats = create_dataset_stats(cfg)
+
+    # Create policy
+    policy_cls = get_policy_class(cfg.policy.name)
+    policy = policy_cls(cfg, stats)
+    num_params = sum(p.numel() for p in policy.parameters())
+    logger.info(f"Number of parameters: {num_params/1e6:.2f}M")
+
+    # Create dataset and dataloader
+    total_episodes = dataset_meta.num_episodes
+    if cfg.val.num_episodes is not None and cfg.val.num_episodes > 0:
+        val_dataset = create_dataset(policy, cfg, list(range(total_episodes - cfg.val.num_episodes, total_episodes)))
+        val_dataloader = create_dataloader(val_dataset, cfg, is_training=False)
+
+        logger.info(f"Val: {val_dataset.num_frames} frames | {val_dataset.num_episodes} episodes | {len(val_dataloader)} batches")
+    else:
+        val_dataloader = None
+
+    eval_env = create_eval_env(
+        eval_n_envs=cfg.val.eval_n_envs,
+        env_package=cfg.task.env_package,
+        env_name=cfg.task.env_name,
+        env_kwargs=cfg.task.env_kwargs
     )
-    while not np.all(done) and step < max_steps:
-        # Numpy array to tensor and changing dictionary keys to LeRobot policy format.
-        observation = preprocess_observation(observation)
-        if return_observations:
-            all_observations.append(deepcopy(observation))
 
-        observation = {key: observation[key].to(device, non_blocking=True) for key in observation}
+    evaluator = PolicyEvaluator(
+        cfg,
+        policy,
+        device=cfg.device,
+        val_dataloader=val_dataloader,
+        eval_env=eval_env
+    )
 
-        with torch.inference_mode():
-            action = policy.select_action(observation)
+    start_step = evaluator.load_checkpoint(checkpoint_path)
+    logger.info(f"Evaluating checkpoint at path {checkpoint_path} and step {start_step}")
 
-        # Convert to CPU / numpy.
-        action = action.to("cpu").numpy()
-        assert action.ndim == 2, "Action dimensions should be (batch, action_dim)"
+    evaluator.eval()
 
-        # Apply the next action.
-        observation, reward, terminated, truncated, info = env.step(action)
-        if render_callback is not None:
-            render_callback(env)
+    # Cleanup
+    if eval_env:
+        eval_env.close()
 
-        # VectorEnv stores is_success in `info["final_info"][env_index]["is_success"]`. "final_info" isn't
-        # available of none of the envs finished.
-        if "final_info" in info:
-            successes = [info["is_success"] if info is not None else False for info in info["final_info"]]
-        else:
-            successes = [False] * env.num_envs
-
-        # Keep track of which environments are done so far.
-        done = terminated | truncated | done
-
-        all_actions.append(torch.from_numpy(action))
-        all_rewards.append(torch.from_numpy(reward))
-        all_dones.append(torch.from_numpy(done))
-        all_successes.append(torch.tensor(successes))
-
-        step += 1
-        running_success_rate = (
-            einops.reduce(torch.stack(all_successes, dim=1), "b n -> b", "any").numpy().mean()
-        )
-        progbar.set_postfix({"running_success_rate": f"{running_success_rate.item() * 100:.1f}%"})
-        progbar.update()
-
-    # Track the final observation.
-    if return_observations:
-        observation = preprocess_observation(observation)
-        all_observations.append(deepcopy(observation))
-
-    # Stack the sequence along the first dimension so that we have (batch, sequence, *) tensors.
-    ret = {
-        "action": torch.stack(all_actions, dim=1),
-        "reward": torch.stack(all_rewards, dim=1),
-        "success": torch.stack(all_successes, dim=1),
-        "done": torch.stack(all_dones, dim=1),
-    }
-    if return_observations:
-        stacked_observations = {}
-        for key in all_observations[0]:
-            stacked_observations[key] = torch.stack([obs[key] for obs in all_observations], dim=1)
-        ret["observation"] = stacked_observations
-
-    return ret
+    logger.info("Evaluation completed!")
 
 
-def eval_policy(
-    env: gym.vector.VectorEnv,
-    policy: torch.nn.Module,
-    n_episodes: int,
-    max_episodes_rendered: int = 0,
-    videos_dir: Path | None = None,
-    return_episode_data: bool = False,
-    start_seed: int | None = None,
-) -> dict:
-    """
-    Args:
-        env: The batch of environments.
-        policy: The policy.
-        n_episodes: The number of episodes to evaluate.
-        max_episodes_rendered: Maximum number of episodes to render into videos.
-        videos_dir: Where to save rendered videos.
-        return_episode_data: Whether to return episode data for online training. Incorporates the data into
-            the "episodes" key of the returned dictionary.
-        start_seed: The first seed to use for the first individual rollout. For all subsequent rollouts the
-            seed is incremented by 1. If not provided, the environments are not manually seeded.
-    Returns:
-        Dictionary with metrics and data regarding the rollouts.
-    """
-    if max_episodes_rendered > 0 and not videos_dir:
-        raise ValueError("If max_episodes_rendered > 0, videos_dir must be provided.")
-
-    start = time.time()
-    policy.eval()
-
-    # Determine how many batched rollouts we need to get n_episodes. Note that if n_episodes is not evenly
-    # divisible by env.num_envs we end up discarding some data in the last batch.
-    n_batches = n_episodes // env.num_envs + int((n_episodes % env.num_envs) != 0)
-
-    # Keep track of some metrics.
-    sum_rewards = []
-    max_rewards = []
-    all_successes = []
-    all_seeds = []
-    threads = []  # for video saving threads
-    n_episodes_rendered = 0  # for saving the correct number of videos
-
-    # Callback for visualization.
-    def render_frame(env: gym.vector.VectorEnv):
-        # noqa: B023
-        if n_episodes_rendered >= max_episodes_rendered:
-            return
-        n_to_render_now = min(max_episodes_rendered - n_episodes_rendered, env.num_envs)
-        if isinstance(env, gym.vector.SyncVectorEnv):
-            ep_frames.append(np.stack([env.envs[i].render() for i in range(n_to_render_now)]))  # noqa: B023
-        elif isinstance(env, gym.vector.AsyncVectorEnv):
-            # Here we must render all frames and discard any we don't need.
-            ep_frames.append(np.stack(env.call("render")[:n_to_render_now]))
-
-    if max_episodes_rendered > 0:
-        video_paths: list[str] = []
-
-    if return_episode_data:
-        episode_data: dict | None = None
-
-    # we dont want progress bar when we use slurm, since it clutters the logs
-    progbar = trange(n_batches, desc="Stepping through eval batches", disable=inside_slurm())
-    for batch_ix in progbar:
-        # Cache frames for rendering videos. Each item will be (b, h, w, c), and the list indexes the rollout
-        # step.
-        if max_episodes_rendered > 0:
-            ep_frames: list[np.ndarray] = []
-
-        if start_seed is None:
-            seeds = None
-        else:
-            seeds = range(
-                start_seed + (batch_ix * env.num_envs), start_seed + ((batch_ix + 1) * env.num_envs)
-            )
-        rollout_data = rollout(
-            env,
-            policy,
-            seeds=list(seeds) if seeds else None,
-            return_observations=return_episode_data,
-            render_callback=render_frame if max_episodes_rendered > 0 else None,
-        )
-
-        # Figure out where in each rollout sequence the first done condition was encountered (results after
-        # this won't be included).
-        n_steps = rollout_data["done"].shape[1]
-        # Note: this relies on a property of argmax: that it returns the first occurrence as a tiebreaker.
-        done_indices = torch.argmax(rollout_data["done"].to(int), dim=1)
-
-        # Make a mask with shape (batch, n_steps) to mask out rollout data after the first done
-        # (batch-element-wise). Note the `done_indices + 1` to make sure to keep the data from the done step.
-        mask = (torch.arange(n_steps) <= einops.repeat(done_indices + 1, "b -> b s", s=n_steps)).int()
-        # Extend metrics.
-        batch_sum_rewards = einops.reduce((rollout_data["reward"] * mask), "b n -> b", "sum")
-        sum_rewards.extend(batch_sum_rewards.tolist())
-        batch_max_rewards = einops.reduce((rollout_data["reward"] * mask), "b n -> b", "max")
-        max_rewards.extend(batch_max_rewards.tolist())
-        batch_successes = einops.reduce((rollout_data["success"] * mask), "b n -> b", "any")
-        all_successes.extend(batch_successes.tolist())
-        if seeds:
-            all_seeds.extend(seeds)
-        else:
-            all_seeds.append(None)
-
-        # FIXME: episode_data is either None or it doesn't exist
-        if return_episode_data:
-            this_episode_data = _compile_episode_data(
-                rollout_data,
-                done_indices,
-                start_episode_index=batch_ix * env.num_envs,
-                start_data_index=(0 if episode_data is None else (episode_data["index"][-1].item() + 1)),
-                fps=env.unwrapped.metadata["render_fps"],
-            )
-            if episode_data is None:
-                episode_data = this_episode_data
-            else:
-                # Some sanity checks to make sure we are correctly compiling the data.
-                assert episode_data["episode_index"][-1] + 1 == this_episode_data["episode_index"][0]
-                assert episode_data["index"][-1] + 1 == this_episode_data["index"][0]
-                # Concatenate the episode data.
-                episode_data = {k: torch.cat([episode_data[k], this_episode_data[k]]) for k in episode_data}
-
-        # Maybe render video for visualization.
-        if max_episodes_rendered > 0 and len(ep_frames) > 0:
-            batch_stacked_frames = np.stack(ep_frames, axis=1)  # (b, t, *)
-            for stacked_frames, done_index in zip(
-                batch_stacked_frames, done_indices.flatten().tolist(), strict=False
-            ):
-                if n_episodes_rendered >= max_episodes_rendered:
-                    break
-
-                videos_dir.mkdir(parents=True, exist_ok=True)
-                video_path = videos_dir / f"eval_episode_{n_episodes_rendered}.mp4"
-                video_paths.append(str(video_path))
-                thread = threading.Thread(
-                    target=write_video,
-                    args=(
-                        str(video_path),
-                        stacked_frames[: done_index + 1],  # + 1 to capture the last observation
-                        env.unwrapped.metadata["render_fps"],
-                    ),
-                )
-                thread.start()
-                threads.append(thread)
-                n_episodes_rendered += 1
-
-        progbar.set_postfix(
-            {"running_success_rate": f"{np.mean(all_successes[:n_episodes]).item() * 100:.1f}%"}
-        )
-
-    # Wait till all video rendering threads are done.
-    for thread in threads:
-        thread.join()
-
-    # Compile eval info.
-    info = {
-        "per_episode": [
-            {
-                "episode_ix": i,
-                "sum_reward": sum_reward,
-                "max_reward": max_reward,
-                "success": success,
-                "seed": seed,
-            }
-            for i, (sum_reward, max_reward, success, seed) in enumerate(
-                zip(
-                    sum_rewards[:n_episodes],
-                    max_rewards[:n_episodes],
-                    all_successes[:n_episodes],
-                    all_seeds[:n_episodes],
-                    strict=True,
-                )
-            )
-        ],
-        "aggregated": {
-            "avg_sum_reward": float(np.nanmean(sum_rewards[:n_episodes])),
-            "avg_max_reward": float(np.nanmean(max_rewards[:n_episodes])),
-            "pc_success": float(np.nanmean(all_successes[:n_episodes]) * 100),
-            "eval_s": time.time() - start,
-            "eval_ep_s": (time.time() - start) / n_episodes,
-        },
-    }
-
-    if return_episode_data:
-        info["episodes"] = episode_data
-
-    if max_episodes_rendered > 0:
-        info["video_paths"] = video_paths
-
-    return info
-
-
-def _compile_episode_data(
-    rollout_data: dict, done_indices: Tensor, start_episode_index: int, start_data_index: int, fps: float
-) -> dict:
-    """Convenience function for `eval_policy(return_episode_data=True)`
-
-    Compiles all the rollout data into a Hugging Face dataset.
-
-    Similar logic is implemented when datasets are pushed to hub (see: `push_to_hub`).
-    """
-    ep_dicts = []
-    total_frames = 0
-    for ep_ix in range(rollout_data["action"].shape[0]):
-        # + 2 to include the first done frame and the last observation frame.
-        num_frames = done_indices[ep_ix].item() + 2
-        total_frames += num_frames
-
-        # Here we do `num_frames - 1` as we don't want to include the last observation frame just yet.
-        ep_dict = {
-            "action": rollout_data["action"][ep_ix, : num_frames - 1],
-            "episode_index": torch.tensor([start_episode_index + ep_ix] * (num_frames - 1)),
-            "frame_index": torch.arange(0, num_frames - 1, 1),
-            "timestamp": torch.arange(0, num_frames - 1, 1) / fps,
-            "next.done": rollout_data["done"][ep_ix, : num_frames - 1],
-            "next.success": rollout_data["success"][ep_ix, : num_frames - 1],
-            "next.reward": rollout_data["reward"][ep_ix, : num_frames - 1].type(torch.float32),
-        }
-
-        # For the last observation frame, all other keys will just be copy padded.
-        for k in ep_dict:
-            ep_dict[k] = torch.cat([ep_dict[k], ep_dict[k][-1:]])
-
-        for key in rollout_data["observation"]:
-            ep_dict[key] = rollout_data["observation"][key][ep_ix, :num_frames]
-
-        ep_dicts.append(ep_dict)
-
-    data_dict = {}
-    for key in ep_dicts[0]:
-        data_dict[key] = torch.cat([x[key] for x in ep_dicts])
-
-    data_dict["index"] = torch.arange(start_data_index, start_data_index + total_frames, 1)
-
-    return data_dict
+if __name__ == "__main__":
+    evaluate()
