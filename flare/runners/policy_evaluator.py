@@ -26,7 +26,7 @@ class PolicyEvaluator:
         self.device = device
         self.val_dataloader = val_dataloader
         self.eval_env = eval_env
-        self.ema = None
+        self.ema = network.get_ema()
 
         self.flare_logger = FlareLogger(config)
 
@@ -67,6 +67,7 @@ class PolicyEvaluator:
         model = self.network
 
         if self.config.use_ema and self.ema is not None:
+            logger.info("Using EMA weights for evaluation")
             self.ema.store(model.parameters())
             self.ema.copy_to(model.parameters())
 
