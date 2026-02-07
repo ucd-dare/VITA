@@ -1,18 +1,29 @@
 from typing import Callable
 
+import os
+import torch
+
+torch.set_float32_matmul_precision("highest")
+torch.backends.cuda.matmul.allow_tf32 = False
+torch.backends.cudnn.allow_tf32 = False
+torch.backends.cudnn.benchmark = False
+torch.use_deterministic_algorithms(True, warn_only=True)
+os.environ["NVIDIA_TF32_OVERRIDE"] = "0"
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8" 
+
 import logging
 import time
 import einops
 import numpy as np
 import threading
 import importlib
-import torch
 from pprint import pformat
 from torch import Tensor, nn
 from tqdm import trange
 from copy import deepcopy
 from pathlib import Path
 import gymnasium as gym
+
 
 from flare.utils.policy_utils import get_device_from_parameters, preprocess_observation
 from flare.utils.utils import (
