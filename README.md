@@ -4,11 +4,14 @@
 
 # 🌊 VITA: Vision-to-Action Flow Matching Policy
 
-This repository provides the official implementation of the paper **VITA: Vision-to-Action Flow Matching Policy** (July 2025).
+This repository provides the official implementation of the paper **VITA: Vision-to-Action Flow Matching Policy** (ICLR 2026).
 
 **VITA** is a **noise-free, conditioning-free** policy learning framework that learns visuomotor policies by directly mapping latent images to latent actions.
 
+> **✨ Accepted to ICLR 2026!**
+
 <p align="center">
+  <img src="https://img.shields.io/badge/ICLR-2026-5B5EA6.svg" alt="ICLR 2026">
   <a href="https://ucd-dare.github.io/VITA/"><img src="https://img.shields.io/badge/Project%20Page-%F0%9F%94%8D-blue" alt="Project Page"></a>
   <a href="https://arxiv.org/abs/2507.13231"><img src="https://img.shields.io/badge/arXiv-2507.13231-b31b1b.svg" alt="arXiv"></a>
   <a href="https://arxiv.org/pdf/2507.13231"><img src="https://img.shields.io/badge/PDF-%F0%9F%93%84-blue" alt="PDF"></a>
@@ -25,6 +28,7 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 
 > \[!NOTE\]
+> - **Jan 2026** Accepted to ICLR 2026.
 > - **Dec 2025** ArXiv updated to V3 which includes several new real-world tasks and more discussions.
 > - **Nov 2025:** We have integrated our `VITA` and Diffusion Transformer implementation into [RoboVerse](https://github.com/RoboVerseOrg/RoboVerse) [PR#580](https://github.com/RoboVerseOrg/RoboVerse/pull/580).
 > - **Oct 2025:** Code released. ArXiv updated to V2.
@@ -44,19 +48,23 @@ This section covers installation, dataset preprocessing, and training.
 
 ### 🔧 Setup
 
+
+> \[!IMPORTANT\]
+> - Certain package versions can degrade precision and model performance. Please follow the instructions below in order to set up the environment! We have tested the following setup on NVIDIA A100 and 4090 GPUs.
+
 ```bash
 git clone git@github.com:ucd-dare/VITA.git
 cd VITA
-conda create --name vita python==3.10
+conda create --name vita python==3.10.18
 conda activate vita
 conda install cmake
-pip install -e .
-pip install -r requirements.txt
 # Install LeRobot dependencies
-cd lerobot
-pip install -e .
+pip install -e ./lerobot
 # Install ffmpeg for dataset processing
 conda install -c conda-forge ffmpeg
+# Install VITA
+pip install -e .
+pip install -r requirements.txt
 ```
 
 Set the dataset storage path:
@@ -70,18 +78,12 @@ conda activate vita
 
 Install benchmark dependencies for AV-ALOHA and/or Robomimic as needed:
 
-* **AV-ALOHA**
 
 ```bash
-cd gym-av-aloha
-pip install -e .
-```
-
-* **Robomimic**
-
-```bash
-cd gym-robomimic
-pip install -e .
+# AV-ALOHA
+pip install -e ./gym-av-aloha
+pip install -e ./gym-robomimic
+# Robomimic
 ```
 
 ---
@@ -91,7 +93,6 @@ pip install -e .
 Our dataloaders extend [LeRobot](https://github.com/huggingface/lerobot), converting datasets into offline zarr format for faster training. We host datasets on HuggingFace. To list available datasets:
 
 ```bash
-# 
 cd gym-av-aloha/scripts
 python convert.py --ls
 ```
@@ -127,13 +128,6 @@ python convert.py -r iantc104/robomimic_sim_can
 ```
 
 Datasets will be stored in `./gym-av-aloha/outputs`.
-
-If you encounter errors with `cv2`, `numpy`, or `scipy` during the conversion, re-installing them often resolves the issue:
-
-```bash
-pip uninstall opencv-python numpy scipy
-pip install opencv-python numpy scipy
-```
 
 ---
 

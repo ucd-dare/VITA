@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class ComponentType(Enum):
     POLICY = "policy"
-    TRAINER = "trainer"
+    RUNNER = "runner"
 
     @classmethod
     def from_str(cls, value: str) -> 'ComponentType':
@@ -49,25 +49,25 @@ class Registry:
         """Decorator to register a policy class"""
         return self.register_component(ComponentType.POLICY, name)
 
-    def register_trainer(self, name: str):
-        """Decorator to register a trainer class"""
-        return self.register_component(ComponentType.TRAINER, name)
+    def register_runner(self, name: str):
+        """Decorator to register a runner class"""
+        return self.register_component(ComponentType.RUNNER, name)
 
     def get_policy(self, name: str):
         """Get policy class by name"""
         return self.get_component(ComponentType.POLICY, name)
 
-    def get_trainer(self, name: str):
-        """Get trainer class by name"""
-        return self.get_component(ComponentType.TRAINER, name)
+    def get_runner(self, name: str):
+        """Get runner class by name"""
+        return self.get_component(ComponentType.RUNNER, name)
 
     def register_from_module(self, component_type: ComponentType, module_path: str, suffix: str = ''):
         """Register components from a module path
 
         Args:
             component_type: Type of component from ComponentType enum
-            module_path: Path to the module (e.g., 'flare.trainers')
-            suffix: Suffix to strip from class names (e.g., 'trainer')
+            module_path: Path to the module (e.g., 'flare.runners')
+            suffix: Suffix to strip from class names (e.g., 'runner')
         """
         try:
             module = importlib.import_module(module_path)
@@ -95,7 +95,7 @@ registry = Registry()
 
 # Register built-in components
 registry.register_from_module(ComponentType.POLICY, 'flare.policies', 'policy')
-registry.register_from_module(ComponentType.TRAINER, 'flare.trainers', 'trainer')
+registry.register_from_module(ComponentType.RUNNER, 'flare.runners', 'runner')
 
 
 def create_policy(cfg: DictConfig) -> torch.nn.Module:
@@ -109,16 +109,16 @@ def get_policy_class(name: str):
     return registry.get_policy(name)
 
 
-def get_trainer_class(name: str):
-    return registry.get_trainer(name)
+def get_runner_class(name: str):
+    return registry.get_runner(name)
 
 
-def create_trainer(cfg: DictConfig):
+def create_runner(cfg: DictConfig):
     policy = create_policy(cfg)
-    trainer_cls = get_trainer_class(cfg.policy.trainer)
-    trainer = trainer_cls(
+    runner_cls = get_runner_class(cfg.policy.runner)
+    runner = runner_cls(
         config=cfg,
         policy=policy,
         device=cfg.device
     )
-    return trainer
+    return runner

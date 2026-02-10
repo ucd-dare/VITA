@@ -2,7 +2,7 @@
 
 network:
   name: action_vae
-  trainer: policy
+  runner: policy_trainer
 
   action_horizon: 8
   pred_horizon: 16
