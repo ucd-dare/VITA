@@ -1,0 +1,56 @@
+# @package _global_
+
+policy:
+  name: a2a
+  runner: policy_trainer
+
+  action_horizon: 8
+  pred_horizon: 16
+  obs_horizon: 1
+
+  observer:
+    name: resnet18
+    tokenize: false
+
+  a2a:
+    decode_flow_latents: true
+    consistency_weight: 1.0 # FLC
+    enc_contrastive_weight: 0.0
+    flow_contrastive_weight: 0.0
+    latent_dim: 512
+
+  flow_matcher:
+    name: exact # OT-CFM
+    sigma: 0.0
+    num_sampling_steps: 6
+
+  flow_net:
+    name: simple
+    hidden_dim: 512
+    num_layers: 4
+    mlp_ratio: 4
+    dropout: 0.0
+
+  obs_ae:
+    recon_weight: 0.0
+    hidden_dim: 512
+    num_layers: 1
+
+  action_ae:
+    kl_weight: 0.0
+    use_variational: false
+    enc_recon_weight: 0.5 # AE
+    flow_recon_weight: 0.5 # FLD
+    freeze_encoder: false
+    freeze_decoder: false
+
+    net:
+      encoder_type: cnn
+      decoder_type: simple
+      enc_hidden_dim: 512
+      dec_hidden_dim: 512
+      latent_dim: ${policy.a2a.latent_dim}
+      num_heads: 8
+      mlp_ratio: 4
+      dropout: 0.0
+      num_layers: 4
