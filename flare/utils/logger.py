@@ -4,8 +4,11 @@ import wandb
 import logging
 import torch
 from omegaconf import OmegaConf
+import matplotlib
 import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
+
+matplotlib.use('Agg')
 
 
 def setup_logging(save_dir, log_file="train.log", debug=False):

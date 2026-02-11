@@ -17,9 +17,12 @@ class BasePolicy(nn.Module, PyTorchModelHubMixin):
         super().__init__()
 
         self.config = config
+        self.stats = stats
+
         self.pred_horizon = config.policy.pred_horizon
         self.action_horizon = config.policy.action_horizon
         self.obs_horizon = config.policy.obs_horizon
+        self.action_dim = config.task.action_dim
 
         self.normalize_inputs = Normalize(config.task.image_keys+[config.task.state_key], stats)
         self.normalize_targets = Normalize([config.task.action_key], stats)

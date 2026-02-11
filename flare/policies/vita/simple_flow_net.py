@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2025 by the authors of
+VITA: Vision-to-Action Flow Matching Policy, Gao et al., 2025
+"""
+
 import torch
 import torch.nn as nn
 from timm.layers import Mlp
@@ -94,6 +99,47 @@ class SimpleFlowNet(nn.Module):
     def forward(self, x, t):
         x = self.input_proj(x)
         t = self.time_embed(t)
+
+        for block in self.layers:
+            x = block(x, t)
+
+        x = self.norm(x)
+        x = self.out_proj(x)
+        return x
+
+
+class SimpleCondFlowNet(SimpleFlowNet):
+    def __init__(
+        self,
+        input_dim,
+        hidden_dim,
+        output_dim,
+        num_layers,
+        mlp_ratio=4.0,
+        dropout=0.0,
+        time_embed_dim=256,
+        condition_dim=512,
+    ):
+        super().__init__(
+            input_dim=input_dim,
+            hidden_dim=hidden_dim,
+            output_dim=output_dim,
+            num_layers=num_layers,
+            mlp_ratio=mlp_ratio,
+            dropout=dropout,
+            time_embed_dim=time_embed_dim
+        )
+
+        self.cond_embed = nn.Linear(condition_dim, hidden_dim)
+
+        self._init_weights()
+
+    def forward(self, x, t, global_cond):
+        x = self.input_proj(x)
+        t = self.time_embed(t)
+        
+        c = self.cond_embed(global_cond)
+        t = t + c  # Inject condition into modulation signal
 
         for block in self.layers:
             x = block(x, t)

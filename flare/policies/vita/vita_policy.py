@@ -1,3 +1,17 @@
+"""
+VITA: Vision-to-Action Flow Matching Policy, Gao et al., 2025
+(Accepted to ICLR 2026)
+
+GitHub:  https://github.com/ucd-dare/VITA
+Website: https://ucd-dare.github.io/VITA
+
+VITA is an highly efficient and performant vision-to-action policy
+that directly flows from visual latents to action latents.
+VITA removes expensive conditioning modules (e.g., cross-attention),
+and directly bridges vision and action spaces.
+"""
+
+
 import torch
 import logging
 import torch.nn.functional as F
@@ -7,7 +21,6 @@ from diffusers.optimization import get_scheduler
 from flare.factory import registry
 from flare.flow.flow_matchers import get_flow_matcher
 from flare.policies.observers.resnet_observer import ResNetObserver
-from flare.utils.normalize import Normalize, Unnormalize
 
 from flare.networks.vita.action_ae import get_autoencoder
 from flare.networks.vita.action_vae import get_variational_autoencoder
@@ -24,17 +37,7 @@ class VitaPolicy(BasePolicy):
     def __init__(self, config, stats):
         super().__init__(config, stats)
 
-        self.config = config
-        self.stats = stats
         self.num_sampling_steps = config.policy.flow_matcher.num_sampling_steps
-        self.action_horizon = config.policy.action_horizon
-        self.action_dim = config.task.action_dim
-        self.obs_horizon = config.policy.obs_horizon
-
-        self.normalize_inputs = Normalize(config.task.image_keys+[config.task.state_key], stats)
-        self.normalize_targets = Normalize([config.task.action_key], stats)
-        self.unnormalize_outputs = Unnormalize([config.task.action_key], stats)
-        self._action_queue = None
 
         self.observer = ResNetObserver(
             state_key=config.task.state_key,

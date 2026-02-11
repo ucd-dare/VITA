@@ -1,3 +1,8 @@
+"""
+Copyright (c) 2025 by the authors of
+VITA: Vision-to-Action Flow Matching Policy, Gao et al., 2025
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
