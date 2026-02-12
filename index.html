@@ -691,13 +691,15 @@
                             VITA: Vision-To-Action Flow Matching Policy
                         </h1>
                         <p class="subtitle is-4 has-text-weight-semibold" style="color: #4f46e5; margin-top: 0.25rem;">
+                            <span class="icon iclr-icon"><i class="fas fa-fire"></i></span>
                             ICLR 2026
                         </p>
                         <div class="is-size-5 publication-authors">
                             <span class="author-block">
                                 <a target="_blank" href="https://gaodechen.github.io/">Dechen Gao</a><sup>1</sup>,
                             </span>
-                            <span class="author-block"> Boqi Zhao<sup>1</sup>, </span>
+                            <span class="author-block">
+                                <a target="_blank" href="https://anchor1021.github.io/">Boqi Zhao</a><sup>1</sup>,
                             <span class="author-block">
                                 <a target="_blank" href="https://andrewcwlee.com/">Andrew Lee</a><sup>1</sup>,
                             </span>
@@ -786,12 +788,13 @@
         <span class="cool-keyword">latent images</span> to
         <span class="cool-keyword">latent actions</span>—<br />without sampling
         from <span class="cool-keyword">Gaussian noise</span> or relying on
-        <span class="cool-keyword">conditioning modules</span>.
+        <span class="cool-keyword">visual conditioning modules</span>.
     </div>
 
     <div class="highlight-box">
         <span class="icon"><i class="fas fa-newspaper"></i></span>
-        Latest: VITA has been accepted to <span class="highlight-bold">ICLR 2026</span>!
+        Latest: VITA has been accepted to <span class="icon iclr-icon"><i class="fas fa-fire"></i></span>
+        <span class="highlight-bold">ICLR 2026</span>!
     </div>
 
     <!-- VITA Animation Section -->
@@ -928,7 +931,7 @@
                             Comparison of the denoising process between conventional flow matching and VITA.
                             Conventional flow matching denoises random Gaussian into actions, VITA
                             flows from latent images to latent actions.
-                            <b>Surprisingly, latent images manifest action semantics through VITA learning. The latent image can decoded into a smooth trajectory, and progressively refined by the ODE process.</b>
+                            <span class="highlight-bold">Surprisingly, latent images manifest action semantics through VITA learning. The latent image can decoded into a smooth trajectory, and progressively refined by the ODE process.</span>
                         </p>
                     </div>
 
@@ -944,15 +947,16 @@
         <div class="container is-max-widescreen">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full-width">
-                    <h2 class="title is-3">Addressing Latent Collapse of E2E Latent Flow Matching Training</h2>
+                    <h2 class="title is-3">Latent Action Learning: Addressing Latent Collapse</h2>
 
                     <div class="content has-text-justified">
                         <p>
+                            <span class="cool-keyword">VITA is the first that learns the flow along with latent actions in an end-to-end manner</span>.
                             Unlike latent diffusion for image generation, where the target latent space can be trainied via abundant image data,
                             action data is sparse and limited and thus the target latent space is hard to be well pre-trained and frozen as the target for flow matching.
                             Naively end-to-end training flow matching along with the target latent space leads to latent collapse (Figure (a) Left).
                             We first time identify the cause of the issue as the training-test time gap between encoder-based latents and ODE-generated latents.
-                            We propose <b>flow latent decoding (FLD)</b>, to backpropagate through the flow ODE solver during training, to close the gap by anchoring latent representations using ground-truth targets.
+                            We propose <span class="cool-keyword">flow latent decoding (FLD)</span>, to backpropagate through the flow ODE solver during training, to close the gap by anchoring latent representations using ground-truth targets.
                         </p>
                     </div>
 
@@ -968,17 +972,47 @@
         <div class="container is-max-widescreen">
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full-width">
-                    <h2 class="title is-3">Efficiency</h2>
-                    <img src="static/images/efficiency.png" class="interpolation-image" />
+                    <h2 class="title is-3">Higher Precision and Faster Convergence!</h2>
+                    <img src="static/images/mse.png" class="interpolation-image" />
                     <br />
                     <br />
 
                     <div class="content has-text-justified">
                         <p>
-                            The table compares the inference latency and peak memory usage of different flow matching policies
-                            when using vector-based (Vector) representations or grid-based representations (Grid) for visual features.
-                            VITA achieves 1.5x to 2x faster inference speed and reduces memory usage by 18.6% to 28.7%.
+                            The MLP-only VITA shows significantly <span class="cool-keyword">faster convergence</span> and <span class="cool-keyword">lower action errors</span> compared to
+                            conventional methods (FM, DP, ACT) using transformers or U-Nets.
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Stochasticity vs. Precision?</h2>
+
+                    <div class="content has-text-justified">
+                        <p>
+                            It is commonly recognized that DP/FM achieve superior performance because of their stochasticity and ability
+                            to capture multi-modality. However, we show that a fully deterministic policy, VITA,
+                            achieves <span class="highlight-bold">higher precision</span>, <span class="highlight-bold">faster convergence</span>,
+                            and <span class="highlight-bold">superior online success rates</span>. Recently, <i>Much Ado about Noising</i>
+                            (Chaoyi Pan et al.) reveals that <span class="cool-keyword">multi-modality</span> does not meaningfully explain the
+                            success of DP/FM policies, resonating with our findings.
+                        </p>
+                    </div>
+
+                    <div class="discussion-callout">
+                        <div class="discussion-marker">!?</div>
+                        <div class="discussion-text">
+                            <span class="discussion-kicker">Counterintuitive takeaway:</span>
+                            For many robotics tasks, <span class="cool-keyword">precision matters more</span> for success; <span class="highlight-bold">millimeter errors</span>
+                            accumulate and lead to <span class="highlight-bold">catastrophic failures</span> (e.g., our ThreadNeedle task).
+                        </div>
                     </div>
                 </div>
             </div>
