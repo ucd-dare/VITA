@@ -707,10 +707,10 @@
                                 <a target="_blank" href="https://ian-chuang.github.io/">Ian Chuang</a><sup>2</sup>,
                             </span>
                             <span class="author-block">
-                                <a target="_blank" href="https://hanchuzhou.github.io/">Hanchu Zhou</a><sup>3</sup>,
+                                <a target="_blank" href="https://hanchuzhou.github.io/">Hanchu Zhou</a><sup>1</sup>,
                             </span>
                             <span class="author-block">
-                                <a target="_blank" href="https://ustcmike.github.io/">Hang Wang</a><sup>3</sup>,
+                                <a target="_blank" href="https://ustcmike.github.io/">Hang Wang</a><sup>1</sup>,
                             </span>
                             <span class="author-block">
                                 <a target="_blank" href="https://sites.google.com/view/zhezhao">Zhe
@@ -718,26 +718,18 @@
                             </span>
                             <span class="author-block">
                                 <a target="_blank" href="https://faculty.engineering.ucdavis.edu/jzhang/">Junshan
-                                    Zhang</a><sup>3</sup>,
+                                    Zhang</a><sup>1</sup>,
                             </span>
                             <span class="author-block">
                                 <a target="_blank" href="https://soltanilab.sf.ucdavis.edu/">Iman
-                                    Soltani</a><sup>4</sup>
+                                    Soltani</a><sup>1</sup>
                             </span>
                         </div>
 
                         <div class="is-size-5 publication-authors">
-                            <span class="author-block"><sup>1</sup>Department of Computer Science, University of
-                                California, Davis</span>
+                            <span class="author-block"><sup>1</sup>University of California, Davis</span>
                             <br />
-                            <span class="author-block"><sup>2</sup>Department of Electrical Engineering and Computer
-                                Sciences, University of California, Berkeley</span>
-                            <br />
-                            <span class="author-block"><sup>3</sup>Department of Electrical and Computer
-                                Engineering, University of California, Davis</span>
-                            <br />
-                            <span class="author-block"><sup>4</sup>Department of Mechanical and Aerospace
-                                Engineering, University of California, Davis</span>
+                            <span class="author-block"><sup>2</sup>University of California, Berkeley</span>
                         </div>
 
                         <div class="column has-text-centered">
@@ -795,6 +787,14 @@
         <span class="icon"><i class="fas fa-newspaper"></i></span>
         Latest: VITA has been accepted to <span class="icon iclr-icon"><i class="fas fa-fire"></i></span>
         <span class="highlight-bold">ICLR 2026</span>!
+    </div>
+
+    <div class="highlight-box">
+        <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+        VITA delivers <span class="cool-keyword">fast convergence</span>,
+        <span class="cool-keyword">high precision</span>, and
+        <span class="cool-keyword">strong success rates</span> while maintaining
+        <span class="cool-keyword">very fast inference</span>.
     </div>
 
     <!-- VITA Animation Section -->
@@ -908,8 +908,7 @@
                         <p>
                             VITA learns a continuous flow from latent visual representations
                             to latent actions without requiring additional conditioning
-                            mechanisms. By leveraging compact 1D visual and action latent
-                            spaces, VITA reduces flow matching to a conditioning-free vector-to-vector mapping,
+                            mechanisms. By leveraging visual and action vector representations, VITA reduces flow matching to a conditioning-free vector-to-vector mapping,
                             allowing for the use of an MLP-only architecture
                             while achieving strong performance across both simulation and
                             real-world visuomotor tasks.
@@ -932,6 +931,9 @@
                             Conventional flow matching denoises random Gaussian into actions, VITA
                             flows from latent images to latent actions.
                             <span class="highlight-bold">Surprisingly, latent images manifest action semantics through VITA learning. The latent image can decoded into a smooth trajectory, and progressively refined by the ODE process.</span>
+                            This explains why MLP-only VITA can achieve strong performance. <span class="cool-keyword">VITA learns action-centric visual representations, leading to closely aligned latent manifolds of vision and action.</span>
+Therefore, a lightweight MLP suffices for VITA, whereas MLP-only FM struggles due to
+the need to transport from an unstructured Gaussian prior to a structured action space 
                         </p>
                     </div>
 
@@ -1043,6 +1045,31 @@
         </div>
     </section>
 
+    <section class="section hero is-light">
+        <div class="container is-max-widescreen">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Efficiency</h2>
+                    <img src="static/images/efficiency.png" class="interpolation-image"
+                        alt="Efficiency comparison of VITA against baseline policies" />
+                    <br />
+                    <br />
+
+                    <div class="content has-text-justified">
+                        <p>
+                            VITA can achieve
+                            <span class="highlight-bold">4,500 chunks/s</span> throughput with
+                            <span class="highlight-bold">0.22 ms/chunk</span> inference time on a single NVIDIA 4090.
+                            Compared with conventional methods,
+                            VITA reduces inference latency by approximately
+                            <span class="cool-keyword">50% to 130%</span>, and peak memory usage by
+                            <span class="cool-keyword">18% to 27%</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Real-World Tasks -->
     <section class="hero is-small">
