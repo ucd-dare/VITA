@@ -8,6 +8,8 @@ This repository provides the official implementation of the paper **VITA: Vision
 
 **VITA** is a **noise-free, conditioning-free** policy learning framework that learns visuomotor policies by directly mapping latent images to latent actions.
 
+VITA achieves state-of-the-art performance and precision, while significantly reducing time and space overheads, and speeds up convergence compared to conventional methods. Furthermore, VITA naturally learns action-centric visual representations, thereby closely aligning latent manifolds of vision and action. Such inductive bias enables MLP-only architectures to achieve strong performance.
+
 > **✨ Accepted to ICLR 2026!**
 
 <p align="center">
@@ -50,7 +52,7 @@ This section covers installation, dataset preprocessing, and training.
 
 
 > \[!IMPORTANT\]
-> - Certain package versions can degrade precision and model performance. Please follow the instructions below in order to set up the environment! We have tested the following setup on NVIDIA A100 and 4090 GPUs.
+> - Please follow the instructions below in order when setting up the environment. Otherwise, certain package versions may reduce numerical precision. The setup has been successfully tested on NVIDIA A100, H200, and RTX 4090 GPUs.
 
 ```bash
 git clone git@github.com:ucd-dare/VITA.git
@@ -142,7 +144,7 @@ wandb:
 
 We log: offline validation results, online simulator validation results, as well as visualizations of the ODE denoising process, which helps interpret how action trajectories evolve during ODE solving using different algorithms.
 
-`Example:` in the first row below, VITA produces a structured action trajectory after just one ODE step, while conventional flow matching starts from Gaussian noise and gradually denoises.
+`Example:` VITA learns action-centric visual representations: visual latents can be directly decoded by the action decoder into smooth action trajectories. The closely aligned manifolds of vision and action explain why MLP suffcies for VITA, while conventional flow matching may struggle to transport from an unstructured Gaussian to a structured action space.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ucd-dare/VITA/refs/heads/gh-pages/static/images/denoising.png" alt="VITA denoising" />
