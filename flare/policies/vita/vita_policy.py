@@ -1,6 +1,5 @@
 """
-VITA: Vision-to-Action Flow Matching Policy, Gao et al., 2025
-(Accepted to ICLR 2026)
+VITA: Vision-to-Action Flow Matching Policy, Gao et al., 2025 (ICLR 2026)
 
 GitHub:  https://github.com/ucd-dare/VITA
 Website: https://ucd-dare.github.io/VITA
@@ -24,9 +23,11 @@ from flare.policies.observers.resnet_observer import ResNetObserver
 
 from flare.networks.vita.action_ae import get_autoencoder
 from flare.networks.vita.action_vae import get_variational_autoencoder
+from flare.losses.contrastive_loss import compute_contrastive_loss
 
 from flare.policies import BasePolicy
 from flare.policies.vita.simple_flow_net import SimpleFlowNet
+from flare.policies.vita.simple_mean_flow_net import SimpleMeanFlowNet
 from flare.visualizer.visualizer import plot_trajectory, plot_ode_steps
 
 logger = logging.getLogger(__name__)
@@ -49,7 +50,7 @@ class VitaPolicy(BasePolicy):
         )
         self.obs_dim = len(self.config.task.image_keys) * 512 + self.config.task.state_dim
 
-        self.FM = get_flow_matcher(**config.policy.flow_matcher)
+        self.FM = get_flow_matcher(**dict(config.policy.flow_matcher))
 
         action_ae_net_config = config.policy.action_ae.net
         self.use_action_vae = config.policy.action_ae.use_variational
@@ -80,7 +81,13 @@ class VitaPolicy(BasePolicy):
 
         # Initialize flow network
         logger.info("Using MLP for flow velocity prediction.")
-        self.flow_net = SimpleFlowNet(
+        if config.policy.flow_net.name == "simple_flow_net":
+            FlowNet = SimpleFlowNet
+        elif config.policy.flow_net.name == "simple_mean_flow_net":
+            FlowNet = SimpleMeanFlowNet
+        else:
+            raise ValueError(f"Unsupported flow_net: {config.policy.flow_net.name}")
+        self.flow_net = FlowNet(
             input_dim=self.latent_dim,
             hidden_dim=config.policy.flow_net.hidden_dim,
             output_dim=self.latent_dim,
@@ -274,23 +281,3 @@ class VitaPolicy(BasePolicy):
             viz[f"denoise_{i}"] = fig2
 
         return viz
-
-
-def compute_contrastive_loss(image_features, action_features, temperature=0.07):
-    # Contrastive loss between image and action feautres (InfoNCE)
-    # Can provide an additional boost on top of FLD and FLC
-
-    # Normalize features
-    batch_size = image_features.size(0)
-    image_features = F.normalize(image_features, dim=1)
-    action_features = F.normalize(action_features, dim=1)
-
-    # Compute similarity matrix
-    logits = torch.matmul(image_features, action_features.T) / temperature
-
-    # Symmetric contrastive loss (image-to-action + action-to-image)
-    labels = torch.arange(batch_size, device=logits.device)
-    loss_i2a = F.cross_entropy(logits, labels)
-    loss_a2i = F.cross_entropy(logits.T, labels)
-
-    return (loss_i2a + loss_a2i) / 2

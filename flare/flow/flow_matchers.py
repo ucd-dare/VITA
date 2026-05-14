@@ -2,13 +2,9 @@ import torch
 import numpy as np
 import torchcfm.conditional_flow_matching as cfm
 
-
-class BaseFlowMatcher():
-    def compute_loss(self, model, target, **kwargs):
-        raise NotImplementedError
-
-    def sample(self, model, shape, device, num_steps, return_traces=False, **kwargs):
-        raise NotImplementedError
+from flare.flow.base_flow_matcher import BaseFlowMatcher
+from flare.flow.mean_flow_matcher import MeanFlowMatcher
+from flare.flow.consistency_flow_matcher import ConsistencyFlowMatcher as _ConsistencyFlowMatcher
 
 
 class TorchFlowMatcher(BaseFlowMatcher):
@@ -83,20 +79,76 @@ class TorchFlowMatcher(BaseFlowMatcher):
         return x
 
 
-CFM_CLASSES = {
-    'conditional': cfm.ConditionalFlowMatcher,
-    'target': cfm.TargetConditionalFlowMatcher,
-    'schrodinger': cfm.SchrodingerBridgeConditionalFlowMatcher,
-    'exact': cfm.ExactOptimalTransportConditionalFlowMatcher
+class ConditionalFlowMatcher(TorchFlowMatcher):
+    def __init__(self, num_sampling_steps=6, **kwargs):
+        super().__init__(cfm.ConditionalFlowMatcher(**kwargs), num_sampling_steps)
+
+
+class TargetConditionalFlowMatcher(TorchFlowMatcher):
+    def __init__(self, num_sampling_steps=6, **kwargs):
+        super().__init__(cfm.TargetConditionalFlowMatcher(**kwargs), num_sampling_steps)
+
+
+class SchrodingerBridgeConditionalFlowMatcher(TorchFlowMatcher):
+    def __init__(self, num_sampling_steps=6, **kwargs):
+        super().__init__(cfm.SchrodingerBridgeConditionalFlowMatcher(**kwargs), num_sampling_steps)
+
+
+class ExactOptimalTransportConditionalFlowMatcher(TorchFlowMatcher):
+    def __init__(self, num_sampling_steps=6, **kwargs):
+        super().__init__(cfm.ExactOptimalTransportConditionalFlowMatcher(**kwargs), num_sampling_steps)
+
+
+class MeanFlowConditionalFlowMatcher(MeanFlowMatcher):
+    '''
+    Implementation of MeanFlow, a 1-step flow matching method.
+    [1] Geng, Zhengyang, et al. "Mean flows for one-step generative modeling." arXiv preprint arXiv:2505.13447 (2025).
+    Used dispersive losses:
+    [2] Sheng, Juyi, et al. "MP1: MeanFlow Tames Policy Learning in 1-step for Robotic Manipulation." arXiv preprint arXiv:2507.10543 (2025).
+    '''
+    def __init__(self, num_sampling_steps=1, **kwargs):
+        if num_sampling_steps != 1:
+            print("Warning: MeanFlow is designed for 1-NFE generation.")
+        super().__init__(**kwargs)
+        self.num_sampling_steps = num_sampling_steps
+
+
+class ImprovedMeanFlowConditionalFlowMatcher(MeanFlowMatcher):
+    '''
+    Implementation of Improved MeanFlow, a 1-step flow matching method.
+    [1] Geng, Zhengyang, et al. "Improved Mean Flows: On the Challenges of Fastforward Generative Models." arXiv preprint arXiv:2512.02012 (2025).
+    '''
+    def __init__(self, num_sampling_steps=1, **kwargs):
+        # Overwrite use_imf to True
+        kwargs['use_imf'] = True
+        if num_sampling_steps != 1:
+            print("Warning: Improved MeanFlow is designed for 1-NFE generation.")
+        super().__init__(**kwargs)
+        self.num_sampling_steps = num_sampling_steps
+
+
+class ConsistencyFlowMatcher(_ConsistencyFlowMatcher):
+    def __init__(self, num_sampling_steps=1, **kwargs):
+        if num_sampling_steps != 1:
+            print("Warning: ConsistencyFlow is designed for 1-NFE generation.")
+        super().__init__(num_sampling_steps=num_sampling_steps, **kwargs)
+
+
+FLOW_MATCHER_CLASSES = {
+    'conditional': ConditionalFlowMatcher,
+    'target': TargetConditionalFlowMatcher,
+    'schrodinger': SchrodingerBridgeConditionalFlowMatcher,
+    'exact': ExactOptimalTransportConditionalFlowMatcher,
+    'mean': MeanFlowConditionalFlowMatcher,
+    'improved_mean': ImprovedMeanFlowConditionalFlowMatcher,
+    'consistency': ConsistencyFlowMatcher,
 }
 
 
-def get_flow_matcher(**kwargs):
-    name = kwargs.pop('name', 'conditional')
-
-    num_sampling_steps = kwargs.pop('num_sampling_steps', 6)
-    # Wrap torchcfm flow matchers for sampling and loss computation
-    if name not in CFM_CLASSES:
-        raise ValueError(f'Invalid flow matcher name: {name}')
-    flow_matcher = CFM_CLASSES[name](**kwargs)
-    return TorchFlowMatcher(flow_matcher, num_sampling_steps=num_sampling_steps)
+def get_flow_matcher(name='conditional', **kwargs):
+    try:
+        flow_matcher_cls = FLOW_MATCHER_CLASSES[name]
+    except KeyError as exc:
+        valid_names = ', '.join(sorted(FLOW_MATCHER_CLASSES))
+        raise ValueError(f"Invalid flow matcher name: {name}. Expected one of: {valid_names}") from exc
+    return flow_matcher_cls(**kwargs)
