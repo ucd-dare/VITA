@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
@@ -19,845 +19,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>VITA: Vision-To-Action Flow Matching Policy</title>
-    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
-
-    <link rel="stylesheet" href="static/css/bulma.min.css" />
-    <link rel="stylesheet" href="static/css/bulma-carousel.min.css" />
-    <link rel="stylesheet" href="static/css/bulma-slider.min.css" />
-    <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
-    <link rel="stylesheet" href="static/css/index.css" />
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-    <script defer src="static/js/fontawesome.all.min.js"></script>
-    <script src="static/js/bulma-carousel.min.js"></script>
-    <script src="static/js/bulma-slider.min.js"></script>
-    <script src="static/js/index.js"></script>
-
-    <style>
-        .publication-title {
-            font-family: "Inter", "Google Sans", sans-serif !important;
-            font-weight: 700 !important;
-            font-size: 2.5rem !important;
-            background: linear-gradient(135deg,
-                    #1e293b 0%,
-                    #6366f1 50%,
-                    #8b5cf6 100%) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            position: relative;
-            opacity: 0;
-            animation: title-reveal 0.8s ease-out 1.2s forwards;
-            margin-bottom: 1rem !important;
-        }
-
-        .publication-title::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 2px;
-            animation: title-underline-grow 0.4s ease-out 2s forwards;
-        }
-
-        .publication-title::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 800px;
-            height: 200px;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(ellipse 100px 30px at 20% 30%,
-                    rgba(99, 102, 241, 0.4) 0%,
-                    transparent 70%),
-                radial-gradient(ellipse 120px 25px at 60% 50%,
-                    rgba(168, 85, 247, 0.4) 0%,
-                    transparent 70%),
-                radial-gradient(ellipse 80px 35px at 80% 20%,
-                    rgba(236, 72, 153, 0.4) 0%,
-                    transparent 70%),
-                radial-gradient(ellipse 90px 20px at 40% 70%,
-                    rgba(99, 102, 241, 0.4) 0%,
-                    transparent 70%),
-                radial-gradient(ellipse 110px 40px at 10% 60%,
-                    rgba(168, 85, 247, 0.4) 0%,
-                    transparent 70%),
-                linear-gradient(45deg,
-                    rgba(99, 102, 241, 0.15) 0%,
-                    rgba(168, 85, 247, 0.15) 50%,
-                    rgba(236, 72, 153, 0.15) 100%);
-            background-size: 200px 100px, 180px 80px, 160px 90px, 190px 70px,
-                210px 110px, 400px 200px;
-            animation: water-flow-to-title 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0s forwards;
-            opacity: 1;
-            pointer-events: none;
-            z-index: 5;
-            border-radius: 50%;
-        }
-
-        @keyframes water-flow-to-title {
-            0% {
-                opacity: 0.8;
-                transform: translate(-50%, -50%) scale(3) rotate(0deg);
-                background-size: 300px 150px, 280px 130px, 260px 140px, 290px 120px,
-                    310px 160px, 600px 300px;
-                filter: blur(2px);
-            }
-
-            25% {
-                opacity: 0.7;
-                transform: translate(-50%, -50%) scale(2.2) rotate(90deg);
-                background-size: 240px 120px, 220px 100px, 200px 110px, 230px 90px,
-                    250px 130px, 500px 250px;
-                filter: blur(1.5px);
-            }
-
-            50% {
-                opacity: 0.6;
-                transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
-                background-size: 180px 90px, 160px 70px, 140px 80px, 170px 60px,
-                    190px 100px, 400px 200px;
-                filter: blur(1px);
-            }
-
-            75% {
-                opacity: 0.4;
-                transform: translate(-50%, -50%) scale(0.8) rotate(270deg);
-                background-size: 120px 60px, 100px 40px, 80px 50px, 110px 30px,
-                    130px 70px, 300px 150px;
-                filter: blur(0.5px);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.3) rotate(360deg);
-                background-size: 60px 30px, 50px 20px, 40px 25px, 55px 15px, 65px 35px,
-                    200px 100px;
-                filter: blur(0px);
-            }
-        }
-
-        @keyframes title-reveal {
-            0% {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes title-underline-grow {
-            0% {
-                width: 0;
-                opacity: 0;
-            }
-
-            100% {
-                width: 120px;
-                opacity: 1;
-            }
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg,
-                    rgba(99, 102, 241, 0.12) 0%,
-                    rgba(168, 85, 247, 0.12) 50%,
-                    rgba(236, 72, 153, 0.12) 100%) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(99, 102, 241, 0.3) !important;
-            border-left: 4px solid #6366f1 !important;
-            color: #1e293b !important;
-            padding: 1.5rem 2rem !important;
-            margin: 1.5rem auto !important;
-            font-size: 1.15rem !important;
-            font-weight: 500 !important;
-            border-radius: 16px !important;
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15),
-                0 2px 8px rgba(0, 0, 0, 0.08) !important;
-            max-width: 1000px !important;
-            display: block !important;
-            text-align: center !important;
-            overflow: hidden !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            position: relative;
-            white-space: normal !important;
-            line-height: 1.5 !important;
-        }
-
-        .highlight-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.2),
-                0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .highlight-box::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                    transparent,
-                    rgba(255, 255, 255, 0.2),
-                    transparent);
-            transition: left 0.8s ease;
-            pointer-events: none;
-        }
-
-        .highlight-box:hover::before {
-            left: 100%;
-        }
-
-        .highlight-box .icon {
-            margin-right: 1rem !important;
-            font-size: 1.5rem !important;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            animation: pulse-glow 2s ease-in-out infinite;
-            display: inline !important;
-        }
-
-        @keyframes pulse-glow {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
-                transform: scale(1);
-            }
-
-            50% {
-                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
-                transform: scale(1.05);
-            }
-        }
-
-        .cool-keyword {
-            font-weight: 700 !important;
-            background: linear-gradient(135deg,
-                    #6366f1,
-                    #8b5cf6,
-                    #ec4899) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            background-size: 200% 100%;
-            animation: keyword-shimmer 3s ease-in-out infinite;
-            display: inline !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-            border-radius: 0 !important;
-        }
-
-        .cool-keyword:hover {
-            filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
-        }
-
-        @keyframes keyword-shimmer {
-
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .highlight-bold {
-            font-weight: 600 !important;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            transition: all 0.3s ease !important;
-            position: relative;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-            border-radius: 0 !important;
-            display: inline !important;
-        }
-
-        .highlight-bold:hover {
-            filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
-        }
-
-        .title.is-3 {
-            background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-        }
-
-        /* VITA Animation Styles */
-        .vita-animation-container {
-            width: 100%;
-            margin: 1rem auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
-            padding: 0.3rem;
-            border: 1px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .vita-stage {
-            width: 100%;
-            max-width: 900px;
-            min-width: 600px;
-            height: 280px;
-            position: relative;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-        }
-
-        .vita-title {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #1e293b;
-            font-size: clamp(18px, 2.5vw, 24px);
-            font-weight: 700;
-            text-align: center;
-            z-index: 100;
-        }
-
-        .vita-subtitle {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #64748b;
-            font-size: clamp(12px, 1.5vw, 16px);
-            font-weight: 500;
-            text-align: center;
-            z-index: 100;
-        }
-
-        .vita-pipeline {
-            position: absolute;
-            top: 70px;
-            left: 0;
-            right: 0;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 0.5%;
-            gap: 0.1%;
-        }
-
-        .vita-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: all 0.3s ease;
-            height: 100px;
-        }
-
-        .vita-image-section {
-            width: 16%;
-            min-width: 80px;
-        }
-
-        .vita-latent-image-section {
-            width: 12%;
-            min-width: 60px;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .vita-latent-image-section.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .vita-flow-section {
-            width: 28%;
-            min-width: 180px;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .vita-flow-section.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .vita-latent-action-section {
-            width: 12%;
-            min-width: 60px;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .vita-latent-action-section.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .vita-action-section {
-            width: 16%;
-            min-width: 80px;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        .vita-action-section.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .vita-robot-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 8px;
-            background: #f8fafc;
-            border: 2px solid rgba(99, 102, 241, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .vita-robot-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        .vita-robot-image:hover {
-            transform: scale(1.05);
-        }
-
-        .vita-latent-container {
-            width: 50px;
-            height: 70px;
-            border-radius: 8px;
-            background: linear-gradient(180deg,
-                    rgba(59, 130, 246, 0.1) 0%,
-                    rgba(59, 130, 246, 0.05) 100%);
-            border: 2px solid rgba(59, 130, 246, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vita-flow-pipeline {
-            width: 100%;
-            height: 70px;
-            position: relative;
-            border-radius: 8px;
-            border-top: 2px solid rgba(139, 92, 246, 0.4);
-            border-bottom: 2px solid rgba(139, 92, 246, 0.4);
-            overflow: hidden;
-            background: linear-gradient(90deg,
-                    rgba(59, 130, 246, 0.15) 0%,
-                    rgba(139, 92, 246, 0.15) 50%,
-                    rgba(34, 197, 94, 0.15) 100%);
-            background-size: 200% 200%;
-            animation: vita-pipeline-shimmer 4s ease-in-out infinite;
-        }
-
-        @keyframes vita-pipeline-shimmer {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .vita-flow-pipeline::before {
-            content: "";
-            position: absolute;
-            top: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg,
-                    rgba(59, 130, 246, 0.6) 0%,
-                    rgba(139, 92, 246, 0.8) 33%,
-                    rgba(34, 197, 94, 0.8) 66%,
-                    rgba(16, 185, 129, 0.6) 100%);
-        }
-
-        .vita-flow-pipeline::after {
-            content: "";
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg,
-                    rgba(59, 130, 246, 0.6) 0%,
-                    rgba(139, 92, 246, 0.8) 33%,
-                    rgba(34, 197, 94, 0.8) 66%,
-                    rgba(16, 185, 129, 0.6) 100%);
-        }
-
-        .vita-latent-action-container {
-            width: 50px;
-            height: 70px;
-            border-radius: 8px;
-            background: linear-gradient(180deg,
-                    rgba(16, 185, 129, 0.1) 0%,
-                    rgba(16, 185, 129, 0.05) 100%);
-            border: 2px solid rgba(16, 185, 129, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vita-action-display {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(180deg,
-                    rgba(245, 101, 101, 0.1) 0%,
-                    rgba(239, 68, 68, 0.05) 100%);
-            border: 2px solid rgba(245, 101, 101, 0.3);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vita-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .vita-vision-particle {
-            background: radial-gradient(circle, #60a5fa, #3b82f6);
-            box-shadow: 0 0 5px rgba(96, 165, 250, 0.8);
-        }
-
-        .vita-latent-image-particle {
-            background: radial-gradient(circle, #60a5fa, #3b82f6);
-            box-shadow: 0 0 5px rgba(96, 165, 250, 0.8);
-        }
-
-        .vita-flow-particle {
-            background: radial-gradient(circle, #60a5fa, #3b82f6);
-            box-shadow: 0 0 5px rgba(96, 165, 250, 0.8);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .vita-latent-action-particle {
-            background: radial-gradient(circle, #34d399, #10b981);
-            box-shadow: 0 0 5px rgba(52, 211, 153, 0.8);
-        }
-
-        .vita-label {
-            color: #475569;
-            font-size: clamp(11px, 1.2vw, 14px);
-            font-weight: 700;
-            margin-top: 6px;
-            text-align: center;
-            opacity: 0.9;
-            max-width: 100%;
-            word-wrap: break-word;
-        }
-
-        .vita-action-path {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .vita-action-curve {
-            stroke: #f59e0b;
-            stroke-width: 2;
-            fill: none;
-            stroke-dasharray: 0;
-            opacity: 0;
-            filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.6));
-        }
-
-        .vita-action-point {
-            fill: #f59e0b;
-            r: 2.5;
-            opacity: 0;
-            filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.8));
-        }
-
-        .vita-control-button {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
-            z-index: 101;
-        }
-
-        .vita-control-button:hover {
-            transform: translateX(-50%) translateY(-1px);
-            box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4);
-        }
-
-        .vita-phase-indicator {
-            position: absolute;
-            bottom: 55px;
-            left: 50%;
-            color: #475569;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-            white-space: nowrap;
-            padding: 4px 10px;
-            background-color: rgba(241, 245, 249, 0.7);
-            border-radius: 8px;
-            transition: all 0.5s ease-in-out;
-            transform: translateX(-50%);
-            z-index: 100;
-        }
-
-        @keyframes vita-drawCurve {
-            from {
-                stroke-dasharray: 0, 250;
-            }
-
-            to {
-                stroke-dasharray: 250, 0;
-            }
-        }
-
-        @keyframes vita-pointAppear {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes vita-curveAppear {
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+    <meta name="theme-color" content="#fcf2ed">
+    <link rel="icon" href="static/images/vita-mark.svg" type="image/svg+xml">
+    <link rel="preload" href="static/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+    <script type="module" src="static/js/vita-page.js"></script>
 </head>
 
 <body>
-    <section class="hero">
-        <div class="hero-body">
-            <div class="container is-fullhd">
-                <div class="columns is-centered">
-                    <div class="column has-text-centered">
-                        <h1 class="title is-1 publication-title">
-                            VITA: Vision-To-Action Flow Matching Policy
-                        </h1>
-                        <p class="subtitle is-4 has-text-weight-semibold" style="color: #4f46e5; margin-top: 0.25rem;">
-                            <span class="icon iclr-icon"><i class="fas fa-fire"></i></span>
-                            ICLR 2026
-                        </p>
-                        <div class="is-size-5 publication-authors">
-                            <span class="author-block">
-                                <a target="_blank" href="https://gaodechen.github.io/">Dechen Gao</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://anchor1021.github.io/">Boqi Zhao</a><sup>1</sup>,
-                            <span class="author-block">
-                                <a target="_blank" href="https://andrewcwlee.com/">Andrew Lee</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://ian-chuang.github.io/">Ian Chuang</a><sup>2</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://hanchuzhou.github.io/">Hanchu Zhou</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://ustcmike.github.io/">Hang Wang</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://sites.google.com/view/zhezhao">Zhe
-                                    Zhao</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://faculty.engineering.ucdavis.edu/jzhang/">Junshan
-                                    Zhang</a><sup>1</sup>,
-                            </span>
-                            <span class="author-block">
-                                <a target="_blank" href="https://soltanilab.sf.ucdavis.edu/">Iman
-                                    Soltani</a><sup>1</sup>
-                            </span>
-                        </div>
+    <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="external" viewBox="0 0 16 16">
+            <path d="M4 12 12 4M5 4h7v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="down" viewBox="0 0 16 16">
+            <path d="M8 2.8v10.4M3.8 9l4.2 4.2L12.2 9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="play" viewBox="0 0 24 24">
+            <path d="m9 5 11 7-11 7z" fill="currentColor"/>
+        </symbol>
+        <symbol id="pause" viewBox="0 0 24 24">
+            <path d="M9 6v12m6-12v12" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="restart" viewBox="0 0 24 24">
+            <path d="M5 10a7 7 0 1 1 1.6 7.2M5 5v5h5" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+    </svg>
 
-                        <div class="is-size-5 publication-authors">
-                            <span class="author-block"><sup>1</sup>University of California, Davis</span>
-                            <br />
-                            <span class="author-block"><sup>2</sup>University of California, Berkeley</span>
-                        </div>
+    <main>
+        <section class="vita-hero" id="top" aria-labelledby="project-title">
+            <header class="vita-header">
+                <a class="vita-brand" href="#top" aria-label="VITA home">
+                    <img src="static/images/vita-mark.svg" alt="" width="32" height="32">
+                    <span>VITA</span>
+                </a>
+                <nav class="project-links" aria-label="Project links">
+                    <a href="https://arxiv.org/pdf/2507.13231" target="_blank" rel="noreferrer">Paper <svg aria-hidden="true"><use href="#external"/></svg></a>
+                    <a href="https://github.com/ucd-dare/VITA" target="_blank" rel="noreferrer">Code <svg aria-hidden="true"><use href="#external"/></svg></a>
+                    <a href="https://arxiv.org/abs/2507.13231" target="_blank" rel="noreferrer">arXiv <svg aria-hidden="true"><use href="#external"/></svg></a>
+                </nav>
+            </header>
 
-                        <div class="column has-text-centered">
-                            <div class="publication-links">
-                                <!-- Arxiv PDF link -->
-                                <span class="link-block">
-                                    <a href="https://arxiv.org/pdf/2507.13231" target="_blank"
-                                        class="external-link button is-normal is-rounded is-dark">
-                                        <span class="icon">
-                                            <i class="fas fa-file-pdf"></i>
-                                        </span>
-                                        <span>Paper</span>
-                                    </a>
-                                </span>
+            <div class="hero-copy">
+                <h1 id="project-title" aria-label="VITA: Vision-To-Action Flow Matching Policy">
+                    <span class="wordmark-mask"><span class="hero-wordmark">VITA</span></span>
+                    <span class="hero-project-title">Vision-To-Action Flow Matching Policy</span>
+                </h1>
+                <p class="conference" aria-label="Latest: VITA has been accepted to ICLR 2026!">
+                    <img src="static/images/iclr.svg" alt="" width="31" height="26"> <strong>ICLR 2026</strong>
+                </p>
+                <ul class="project-authors" aria-label="Authors">
+                    <li><a href="https://gaodechen.github.io/" target="_blank" rel="noreferrer">Dechen Gao</a><sup>1</sup></li>
+                    <li><a href="https://anchor1021.github.io/" target="_blank" rel="noreferrer">Boqi Zhao</a><sup>1</sup></li>
+                    <li><a href="https://andrewcwlee.com/" target="_blank" rel="noreferrer">Andrew Lee</a><sup>1</sup></li>
+                    <li><a href="https://ian-chuang.github.io/" target="_blank" rel="noreferrer">Ian Chuang</a><sup>2</sup></li>
+                    <li><a href="https://hanchuzhou.github.io/" target="_blank" rel="noreferrer">Hanchu Zhou</a><sup>1</sup></li>
+                    <li><a href="https://ustcmike.github.io/" target="_blank" rel="noreferrer">Hang Wang</a><sup>1</sup></li>
+                    <li><a href="https://sites.google.com/view/zhezhao" target="_blank" rel="noreferrer">Zhe Zhao</a><sup>1</sup></li>
+                    <li><a href="https://faculty.engineering.ucdavis.edu/jzhang/" target="_blank" rel="noreferrer">Junshan Zhang</a><sup>1</sup></li>
+                    <li><a href="https://soltanilab.sf.ucdavis.edu/" target="_blank" rel="noreferrer">Iman Soltani</a><sup>1</sup></li>
+                </ul>
+                <ul class="project-affiliations" aria-label="Affiliations">
+                    <li><sup>1</sup> University of California, Davis</li>
+                    <li><sup>2</sup> University of California, Berkeley</li>
+                </ul>
+            </div>
 
-                                <!-- Github link -->
-                                <span class="link-block">
-                                    <a href="https://github.com/ucd-dare/VITA" target="_blank"
-                                        class="external-link button is-normal is-rounded is-dark">
-                                        <span class="icon">
-                                            <i class="fab fa-github"></i>
-                                        </span>
-                                        <span>Code</span>
-                                    </a>
-                                </span>
+            <figure class="hero-water" aria-label="Vision to Actions">
+                <canvas id="vita-water" aria-hidden="true"></canvas>
+                <div class="hero-vision" aria-hidden="true">
+                    <img src="static/images/cam_image.png" alt="" width="304" height="240">
+                </div>
+                <figcaption class="water-labels">
+                    <span class="water-label water-label-vision"><span><strong>VI</strong>sion</span></span>
+                    <span class="water-label water-label-actions"><span><strong>A</strong>ctions</span></span>
+                </figcaption>
+            </figure>
 
-                                <!-- ArXiv abstract Link -->
-                                <span class="link-block">
-                                    <a href="https://arxiv.org/abs/2507.13231" target="_blank"
-                                        class="external-link button is-normal is-rounded is-dark">
-                                        <span class="icon">
-                                            <i class="ai ai-arxiv"></i>
-                                        </span>
-                                        <span>arXiv</span>
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
+            <div class="hero-footer">
+                <a class="flow-link" href="#flow">Flow Matching <svg aria-hidden="true"><use href="#down"/></svg></a>
+                <button class="motion-button hero-playback" id="hero-playback" type="button" aria-label="Pause animation" data-mode="pause">
+                    <svg class="play-icon" aria-hidden="true"><use href="#play"/></svg>
+                    <svg class="pause-icon" aria-hidden="true"><use href="#pause"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <section class="flow-screen" id="flow" aria-labelledby="flow-title">
+            <div class="flow-inner">
+                <div class="flow-intro">
+                    <div>
+                        <p class="flow-kicker">Noise-Free, Conditioning-Free Policy Learning</p>
+                        <h2 id="flow-title">VITA: <em>Vision-to-Action</em> <span>Flow Matching</span></h2>
+                    </div>
+                    <div class="flow-description">
+                        <p>VITA directly flows from <strong>latent images</strong> to <strong>latent actions</strong>—without sampling from Gaussian noise or relying on visual conditioning modules.</p>
+                        <p>VITA delivers fast convergence, high precision, and strong success rates while maintaining very fast inference.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="highlight-box">
-        <span class="icon"><i class="fas fa-bolt"></i></span>
-        VITA directly flows from
-        <span class="cool-keyword">latent images</span> to
-        <span class="cool-keyword">latent actions</span>—<br />without sampling
-        from <span class="cool-keyword">Gaussian noise</span> or relying on
-        <span class="cool-keyword">visual conditioning modules</span>.
-    </div>
-
-    <div class="highlight-box">
-        <span class="icon"><i class="fas fa-newspaper"></i></span>
-        Latest: VITA has been accepted to <span class="icon iclr-icon"><i class="fas fa-fire"></i></span>
-        <span class="highlight-bold">ICLR 2026</span>!
-    </div>
-
-    <div class="highlight-box">
-        <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
-        VITA delivers <span class="cool-keyword">fast convergence</span>,
-        <span class="cool-keyword">high precision</span>, and
-        <span class="cool-keyword">strong success rates</span> while maintaining
-        <span class="cool-keyword">very fast inference</span>.
-    </div>
-
-    <!-- VITA Animation Section -->
-    <section class="section">
-        <div class="container is-max-widescreen">
-            <div class="columns is-centered">
-                <div class="column is-full-width">
-                    <div class="vita-animation-container">
-                        <div class="vita-stage">
-                            <div class="vita-title">
-                                VITA: Vision-to-Action Flow Matching
-                            </div>
-                            <div class="vita-subtitle">
-                                Noise-Free, Conditioning-Free Policy Learning
-                            </div>
-
-                            <div class="vita-pipeline">
-                                <div class="vita-section vita-image-section">
-                                    <div class="vita-robot-image">
-                                        <img src="static/images/cam_image.png" alt="Camera Image" />
-                                    </div>
-                                    <div class="vita-label">Camera Image</div>
-                                </div>
-
-                                <div class="vita-section vita-latent-image-section" id="vitaLatentImageSection">
-                                    <div class="vita-latent-container" id="vitaLatentImages"></div>
-                                    <div class="vita-label">Latent Images</div>
-                                </div>
-
-                                <div class="vita-section vita-flow-section" id="vitaFlowSection">
-                                    <div class="vita-flow-pipeline" id="vitaFlowPipeline"></div>
-                                    <div class="vita-label">Flow Matching</div>
-                                </div>
-
-                                <div class="vita-section vita-latent-action-section" id="vitaLatentActionSection">
-                                    <div class="vita-latent-action-container" id="vitaLatentActions"></div>
-                                    <div class="vita-label">Latent Actions</div>
-                                </div>
-
-                                <div class="vita-section vita-action-section" id="vitaActionSection">
-                                    <div class="vita-action-display" id="vitaActionDisplay">
-                                        <svg class="vita-action-path" viewBox="0 0 100 100">
-                                            <path class="vita-action-curve" id="vitaActionCurve"
-                                                d="M 15,80 Q 30,25 50,55 Q 70,85 85,35" />
-                                        </svg>
-                                    </div>
-                                    <div class="vita-label">Action Sequence</div>
-                                </div>
-                            </div>
-
-                            <div class="vita-phase-indicator" id="vitaPhaseText">
-                                Ready to start VITA flow
-                            </div>
-                            <button class="vita-control-button" onclick="startVitaAnimation()">
-                                Restart
-                            </button>
+                <div class="flow-comparison">
+                    <figure class="comparison-panel comparison-gaussian">
+                        <figcaption class="comparison-heading">
+                            <h3>Conventional flow matching</h3>
+                        </figcaption>
+                        <div class="flow-visual">
+                            <span class="conditioning-label">Costly cross attention</span>
+                            <canvas id="gaussian-canvas" role="img" aria-label="Gaussian noise flows to actions with visual conditioning through cross-attention."></canvas>
                         </div>
+                        <div class="flow-labels">
+                            <span>Gaussian noise</span>
+                            <span>Actions</span>
+                        </div>
+                    </figure>
+                    <figure class="comparison-panel comparison-vita">
+                        <figcaption class="comparison-heading">
+                            <h3>VITA</h3>
+                            <img src="static/images/vita-mark.svg" alt="" width="36" height="36">
+                        </figcaption>
+                        <div class="flow-visual">
+                            <canvas id="vita-flow-canvas" role="img" aria-label="Latent images flow directly to latent actions."></canvas>
+                        </div>
+                        <div class="flow-labels">
+                            <span>Latent Images</span>
+                            <span>Latent Actions</span>
+                        </div>
+                    </figure>
+                </div>
+                <div class="flow-controls">
+                    <button class="motion-button flow-playback" id="flow-playback" type="button" aria-label="Play animation" data-mode="play">
+                        <svg class="play-icon" aria-hidden="true"><use href="#play"/></svg>
+                        <svg class="pause-icon" aria-hidden="true"><use href="#pause"/></svg>
+                    </button>
+                    <div class="flow-timeline">
+                        <label for="flow-progress">Flow Matching</label>
+                        <input id="flow-progress" type="range" min="0" max="1000" value="0" step="1">
                     </div>
+                    <button class="motion-button flow-restart" id="flow-restart" type="button">
+                        <svg aria-hidden="true"><use href="#restart"/></svg> Restart
+                    </button>
+                </div>
             </div>
-        </div>
-        </div>
-    </section>
+        </section>
 
+        <section class="performance-screen" id="performance" aria-labelledby="performance-title">
+            <div class="performance-inner">
+                <header class="performance-intro">
+                    <h2 id="performance-title">VITA <em>performance</em></h2>
+                    <div class="performance-legend">
+                        <span><i class="legend-vita"></i>VITA</span>
+                        <span><i class="legend-conventional"></i>Conventional flow matching</span>
+                    </div>
+                </header>
+                <div class="performance-grid">
+                    <figure class="performance-metric">
+                        <figcaption><h3>Fast inference</h3></figcaption>
+                        <canvas id="inference-canvas" role="img" aria-label="Two bars compare inference time. VITA is shorter than conventional flow matching with conditioning."></canvas>
+                        <a class="performance-speed" href="https://arxiv.org/abs/2507.13231v4" target="_blank" rel="noreferrer" aria-label="1.5 to 2 times faster inference compared with conventional methods with conditioning modules. VITA paper.">
+                            <strong>1.5×–2×</strong> faster <svg aria-hidden="true"><use href="#external"/></svg>
+                        </a>
+                    </figure>
+                    <figure class="performance-metric">
+                        <figcaption><h3>Fast convergence</h3></figcaption>
+                        <div class="convergence-plot">
+                            <span class="performance-axis">Action errors</span>
+                            <canvas id="convergence-canvas" role="img" aria-label="Illustrative action errors over training steps, with VITA settling earlier."></canvas>
+                        </div>
+                        <span class="performance-caption">Training steps</span>
+                    </figure>
+                    <figure class="performance-metric">
+                        <figcaption><h3>High precision</h3></figcaption>
+                        <canvas id="precision-canvas" role="img" aria-label="One highlighted VITA action trajectory reaches the target."></canvas>
+                        <a class="performance-caption" href="https://arxiv.org/html/2507.13231v4#A2.SS8.SSS2" target="_blank" rel="noreferrer">
+                            Lower action errors <svg aria-hidden="true"><use href="#external"/></svg>
+                        </a>
+                    </figure>
+                </div>
+                <div class="performance-controls">
+                    <button class="motion-button performance-playback" id="performance-playback" type="button" aria-label="Pause animation" data-mode="pause">
+                        <svg class="play-icon" aria-hidden="true"><use href="#play"/></svg>
+                        <svg class="pause-icon" aria-hidden="true"><use href="#pause"/></svg>
+                        <svg class="restart-icon" aria-hidden="true"><use href="#restart"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="research-content">
     <!-- Abstract -->
     <section class="section hero is-light">
         <div class="container is-max-desktop">
@@ -1256,6 +603,8 @@ the need to transport from an unstructured Gaussian prior to a structured action
         </div>
     </section>
     <!--End BibTex citation -->
+        </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
@@ -1281,394 +630,5 @@ the need to transport from an unstructured Gaussian prior to a structured action
             </div>
         </div>
     </footer>
-
-    <script>
-        // VITA Animation JavaScript
-        let vitaIsAnimating = false;
-        let vitaAllParticles = [];
-        let vitaAnimationTimeout = null;
-        let lastPositions = [];
-
-        function vitaGetPointOnCurve(t) {
-            if (t <= 0.5) {
-                const localT = t * 2;
-                const x =
-                    Math.pow(1 - localT, 2) * 15 +
-                    2 * (1 - localT) * localT * 30 +
-                    Math.pow(localT, 2) * 50;
-                const y =
-                    Math.pow(1 - localT, 2) * 80 +
-                    2 * (1 - localT) * localT * 25 +
-                    Math.pow(localT, 2) * 55;
-                return { x, y };
-            } else {
-                const localT = (t - 0.5) * 2;
-                const x =
-                    Math.pow(1 - localT, 2) * 50 +
-                    2 * (1 - localT) * localT * 70 +
-                    Math.pow(localT, 2) * 85;
-                const y =
-                    Math.pow(1 - localT, 2) * 55 +
-                    2 * (1 - localT) * localT * 85 +
-                    Math.pow(localT, 2) * 35;
-                return { x, y };
-            }
-        }
-
-        function vitaCreateParticle(className, container) {
-            const particle = document.createElement("div");
-            particle.className = `vita-particle ${className}`;
-            container.appendChild(particle);
-            vitaAllParticles.push(particle);
-            return particle;
-        }
-
-        function vitaClearAll() {
-            clearTimeout(vitaAnimationTimeout);
-            vitaAllParticles.forEach((p) => p.remove());
-            vitaAllParticles = [];
-            lastPositions = [];
-
-            const curve = document.getElementById("vitaActionCurve");
-            const actionPoints = document.querySelectorAll(".vita-action-point");
-            if (curve) {
-                curve.style.animation = "none";
-                curve.style.opacity = "0";
-            }
-            actionPoints.forEach((point) => point.remove());
-
-            document
-                .getElementById("vitaLatentImageSection")
-                .classList.remove("visible");
-            document.getElementById("vitaFlowSection").classList.remove("visible");
-            document
-                .getElementById("vitaLatentActionSection")
-                .classList.remove("visible");
-            document
-                .getElementById("vitaActionSection")
-                .classList.remove("visible");
-        }
-
-        function vitaUpdatePhase(text, sectionElement = null) {
-            const phaseIndicator = document.getElementById("vitaPhaseText");
-            phaseIndicator.textContent = text;
-
-            if (sectionElement) {
-                const stageRect = document
-                    .querySelector(".vita-stage")
-                    .getBoundingClientRect();
-                const sectionRect = sectionElement.getBoundingClientRect();
-                const newLeft =
-                    sectionRect.left + sectionRect.width / 2 - stageRect.left;
-                phaseIndicator.style.left = `${newLeft}px`;
-            } else {
-                phaseIndicator.style.left = "50%";
-            }
-        }
-
-        function vitaShowSection(sectionId) {
-            document.getElementById(sectionId).classList.add("visible");
-        }
-
-        function vitaGetRandomPositions(container, count) {
-            const rect = container.getBoundingClientRect();
-            const stageRect = document
-                .querySelector(".vita-stage")
-                .getBoundingClientRect();
-            const positions = [];
-
-            for (let i = 0; i < count; i++) {
-                positions.push({
-                    x:
-                        rect.left -
-                        stageRect.left +
-                        6 +
-                        Math.random() * (rect.width - 12),
-                    y:
-                        rect.top - stageRect.top + 6 + Math.random() * (rect.height - 12),
-                });
-            }
-            return positions;
-        }
-
-        function vitaCreateVisionParticles() {
-            const imageContainer = document.querySelector(".vita-robot-image");
-            const positions = vitaGetRandomPositions(imageContainer, 10);
-
-            positions.forEach((pos, i) => {
-                const particle = vitaCreateParticle(
-                    "vita-vision-particle",
-                    document.querySelector(".vita-stage")
-                );
-                particle.style.left = pos.x + "px";
-                particle.style.top = pos.y + "px";
-
-                vitaAnimationTimeout = setTimeout(() => {
-                    particle.style.opacity = "1";
-                }, i * 50);
-            });
-        }
-
-        function vitaMoveParticlesToContainer(
-            targetContainer,
-            newClass,
-            preserveLayout = false
-        ) {
-            return new Promise((resolve) => {
-                const targetRect = targetContainer.getBoundingClientRect();
-                const stageRect = document
-                    .querySelector(".vita-stage")
-                    .getBoundingClientRect();
-
-                let positions = [];
-
-                if (preserveLayout && lastPositions.length > 0) {
-                    const cloudCenter = lastPositions.reduce(
-                        (acc, pos) => {
-                            acc.x += pos.x;
-                            acc.y += pos.y;
-                            return acc;
-                        },
-                        { x: 0, y: 0 }
-                    );
-                    cloudCenter.x /= lastPositions.length;
-                    cloudCenter.y /= lastPositions.length;
-
-                    const targetCenter = {
-                        x: targetRect.left - stageRect.left + targetRect.width / 2,
-                        y: targetRect.top - stageRect.top + targetRect.height / 2,
-                    };
-
-                    const delta = {
-                        x: targetCenter.x - cloudCenter.x,
-                        y: targetCenter.y - cloudCenter.y,
-                    };
-
-                    positions = lastPositions.map((p) => ({
-                        x: p.x + delta.x,
-                        y: p.y + delta.y,
-                    }));
-                } else {
-                    positions = vitaGetRandomPositions(
-                        targetContainer,
-                        vitaAllParticles.length
-                    );
-                }
-
-                vitaAllParticles.forEach((particle, i) => {
-                    const pos = positions[i];
-                    particle.style.left = pos.x + "px";
-                    particle.style.top = pos.y + "px";
-                    particle.className = `vita-particle ${newClass}`;
-                });
-
-                vitaAnimationTimeout = setTimeout(resolve, 600);
-            });
-        }
-
-        function vitaAnimateFlowMatching() {
-            return new Promise((resolve) => {
-                const flowPipeline = document.getElementById("vitaFlowPipeline");
-                const pipelineRect = flowPipeline.getBoundingClientRect();
-                const stageRect = document
-                    .querySelector(".vita-stage")
-                    .getBoundingClientRect();
-
-                const startX = pipelineRect.left - stageRect.left;
-                const endX = pipelineRect.right - stageRect.left;
-                const centerY =
-                    pipelineRect.top + pipelineRect.height / 2 - stageRect.top;
-
-                const steps = 3;
-                let currentStep = 1;
-
-                function animateStep() {
-                    if (currentStep > steps) {
-                        lastPositions = vitaAllParticles.map((p) => ({
-                            x: parseFloat(p.style.left),
-                            y: parseFloat(p.style.top),
-                        }));
-                        resolve();
-                        return;
-                    }
-
-                    const progress = currentStep / steps;
-
-                    vitaAllParticles.forEach((particle) => {
-                        const initialX = parseFloat(particle.dataset.initialX);
-                        const travelDist = endX - 20 - initialX;
-                        const baseX = initialX + travelDist * progress;
-
-                        let x = baseX + (Math.random() - 0.5) * 60 * progress;
-                        x = Math.max(startX + 5, Math.min(x, endX - 5));
-
-                        let y =
-                            centerY + (Math.random() - 0.5) * (pipelineRect.height - 12);
-                        y = Math.max(
-                            pipelineRect.top - stageRect.top + 5,
-                            Math.min(y, pipelineRect.bottom - stageRect.top - 5)
-                        );
-
-                        const blueAmount = 1 - progress;
-                        const greenAmount = progress;
-
-                        const r = Math.round(96 * blueAmount + 52 * greenAmount);
-                        const g = Math.round(165 * blueAmount + 211 * greenAmount);
-                        const b = Math.round(250 * blueAmount + 153 * greenAmount);
-
-                        particle.style.left = x + "px";
-                        particle.style.top = y + "px";
-                        particle.style.background = `radial-gradient(circle, rgb(${r}, ${g}, ${b}), rgb(${Math.round(
-                            r * 0.8
-                        )}, ${Math.round(g * 0.8)}, ${Math.round(b * 0.8)}))`;
-                        particle.style.boxShadow = `0 0 5px rgba(${r}, ${g}, ${b}, 0.8)`;
-                    });
-
-                    currentStep++;
-                    vitaAnimationTimeout = setTimeout(animateStep, 600);
-                }
-
-                animateStep();
-            });
-        }
-
-        function vitaClearFlowParticles() {
-            vitaAllParticles = vitaAllParticles.filter((particle) => {
-                if (particle.classList.contains("vita-latent-action-particle")) {
-                    particle.remove();
-                    return false;
-                }
-                return true;
-            });
-        }
-
-        function vitaCreateActionSequence() {
-            const svg = document.querySelector(".vita-action-path");
-            const curve = document.getElementById("vitaActionCurve");
-
-            const numPoints = 7;
-            for (let i = 0; i < numPoints; i++) {
-                const t = i / (numPoints - 1);
-                const point = vitaGetPointOnCurve(t);
-
-                const circle = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "circle"
-                );
-                circle.setAttribute("class", "vita-action-point");
-                circle.setAttribute("cx", point.x);
-                circle.setAttribute("cy", point.y);
-                svg.appendChild(circle);
-            }
-
-            const points = document.querySelectorAll(".vita-action-point");
-
-            points.forEach((point, i) => {
-                vitaAnimationTimeout = setTimeout(() => {
-                    point.style.animation = "vita-pointAppear 300ms ease-out forwards";
-                }, i * 100);
-            });
-
-            vitaAnimationTimeout = setTimeout(() => {
-                curve.style.animation =
-                    "vita-curveAppear 400ms ease-out forwards, vita-drawCurve 800ms ease-out forwards";
-            }, points.length * 100 + 300);
-        }
-
-        async function startVitaAnimation() {
-            if (vitaIsAnimating) return;
-
-            vitaIsAnimating = true;
-            document.querySelector(".vita-control-button").textContent =
-                "Running...";
-
-            vitaClearAll();
-
-            const imageSection = document.querySelector(".vita-image-section");
-            vitaUpdatePhase("Encoding camera images", imageSection);
-            vitaCreateVisionParticles();
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 800)));
-
-            const latentImageSection = document.getElementById(
-                "vitaLatentImageSection"
-            );
-            vitaUpdatePhase("Latent images", latentImageSection);
-            vitaShowSection("vitaLatentImageSection");
-
-            const latentImageContainer =
-                document.getElementById("vitaLatentImages");
-            await vitaMoveParticlesToContainer(
-                latentImageContainer,
-                "vita-latent-image-particle"
-            );
-
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 600)));
-
-            // --- Start: 平移 to Flow Start ---
-            const flowSection = document.getElementById("vitaFlowSection");
-            vitaUpdatePhase("Flowing from latent images to latent action...", flowSection);
-            vitaShowSection("vitaFlowSection");
-            const flowPipeline = document.getElementById("vitaFlowPipeline");
-            const pipelineRect = flowPipeline.getBoundingClientRect();
-            const latentImageRect = latentImageContainer.getBoundingClientRect();
-            const stageRect = document
-                .querySelector(".vita-stage")
-                .getBoundingClientRect();
-
-            const xOffset =
-                pipelineRect.left -
-                latentImageRect.left +
-                (pipelineRect.width * 0.1 - latentImageRect.width / 2);
-
-            vitaAllParticles.forEach((particle) => {
-                const currentX = particle.offsetLeft;
-                const currentY = particle.offsetTop;
-                const targetX = currentX + xOffset;
-
-                particle.dataset.initialX = targetX;
-                particle.style.left = targetX + "px";
-                particle.style.top = currentY + "px"; // Keep Y the same
-                particle.className = "vita-particle vita-flow-particle";
-            });
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 800)));
-            // --- End: 平移 to Flow Start ---
-
-            await vitaAnimateFlowMatching();
-
-            const latentActionSection = document.getElementById(
-                "vitaLatentActionSection"
-            );
-            vitaUpdatePhase("Latent actions", latentActionSection);
-            vitaShowSection("vitaLatentActionSection");
-
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 400)));
-
-            await vitaMoveParticlesToContainer(
-                document.getElementById("vitaLatentActions"),
-                "vita-latent-action-particle",
-                true // Preserve layout
-            );
-
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 600)));
-
-            const actionSection = document.getElementById("vitaActionSection");
-            vitaUpdatePhase("Decoding to action sequence", actionSection);
-            vitaShowSection("vitaActionSection");
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 400)));
-
-            vitaClearFlowParticles();
-            vitaCreateActionSequence();
-            await new Promise((r) => (vitaAnimationTimeout = setTimeout(r, 2000)));
-
-            vitaUpdatePhase("Actions Generated", null);
-            document.querySelector(".vita-control-button").textContent = "Restart";
-            vitaIsAnimating = false;
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            vitaAnimationTimeout = setTimeout(startVitaAnimation, 1500);
-        });
-    </script>
 </body>
-
 </html>
