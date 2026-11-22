@@ -104,17 +104,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 .vita-brand img { display: block; flex: none; }
-.project-links { gap: clamp(14px, 2.15vw, 30px); }
-.project-links a {
-    gap: 4px;
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 620;
-    transition: color .2s;
-}
-.project-links a:hover { color: var(--wine); }
-.project-links svg { width: 13px; height: 13px; }
-
 .hero-copy {
     z-index: 1;
     width: min(100% - 44px, 1200px);
@@ -239,6 +228,39 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     color: var(--muted);
     font-size: clamp(11px, .95vw, 14px);
     line-height: 1.45;
+}
+
+.project-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: clamp(13px, 2svh, 20px);
+    animation: rise-in .84s .5s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.project-links a {
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 17px;
+    border-radius: 24px;
+    background: #f7e8e4;
+    color: #55394e;
+    font: 650 .9375rem/1 var(--display);
+    transition: background-color .18s, transform .18s;
+}
+
+.project-links .paper-link { background: #593752; color: #fff8f1; }
+.project-links a:hover { background: #efd8d6; transform: translateY(-2px); }
+.project-links .paper-link:hover { background: #724560; }
+.project-links svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .hero-water {
@@ -823,12 +845,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 @media (max-width: 650px) {
+    .vita-hero { min-height: max(100svh, 690px); }
     .vita-header, .hero-footer, .flow-inner, .performance-inner { width: calc(100% - 36px); }
     .vita-header { height: 55px; }
     .vita-brand { gap: 6px; font-size: 15px; }
     .vita-brand img { width: 28px; height: 28px; }
-    .project-links a { font-size: 12px; }
-    .project-links svg { width: 11px; height: 11px; }
+    .project-links a { gap: 6px; padding-inline: 12px; }
     .hero-copy { width: calc(100% - 34px); padding-top: clamp(39px, 6.2svh, 64px); }
     .wordmark-mask { font-size: clamp(86px, 24vw, 125px); }
     .hero-project-title { margin-top: 6px; font-size: clamp(25px, 7vw, 35px); }
@@ -860,7 +882,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 @media (max-width: 360px) {
-    .project-links { gap: 10px; }
+    .project-links { gap: 5px; }
+    .project-links a { padding-inline: 9px; }
     .project-authors { gap: 5px 8px; font-size: 13px; }
     .hero-project-title { font-size: 25px; }
     .water-labels { font-size: 13px; }
