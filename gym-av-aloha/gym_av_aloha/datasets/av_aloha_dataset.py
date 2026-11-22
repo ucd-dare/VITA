@@ -244,41 +244,44 @@ class AVAlohaDataset(torch.utils.data.Dataset):
 
         self.repo_id = repo_id
         self.root = Path(root) if root else ROOT / repo_id
-        self.episodes = episodes
         self.image_transforms = image_transforms
         self.delta_timestamps = delta_timestamps
         self.tolerance_s = tolerance_s
-        self.episodes = episodes
 
         # create zarr dataset + lerobot metadata
         self.replay_buffer = ReplayBuffer.copy_from_path(self.root)
         self.meta = AVAlohaDatasetMeta(repo_id=self.repo_id, root=self.root)
 
-        # if no episodes are specified, use all episodes in the replay buffer
-        if not self.episodes: 
-            self.episodes = list(range(self.meta.num_episodes))
-
-        # calculate length of the dataset
-        self.length = sum([self.replay_buffer.episode_lengths[i] for i in self.episodes])
+        self.episodes = (
+            list(range(self.meta.num_episodes)) if episodes is None else list(dict.fromkeys(episodes))
+        )
+        self._episode_ends = np.asarray(self.replay_buffer.episode_ends[:])
+        self._episode_starts = np.r_[0, self._episode_ends][:-1]
 
         # add task index to delta timestamps
         if 'task_index' in self.features:
             self.delta_timestamps['task_index'] = [0]  
 
-        # from and to indices for episodes
-        self.episode_data_index = get_episode_data_index({
-            i: {'length': length}
-            for i, length in enumerate(self.replay_buffer.episode_lengths)
-        }, self.episodes)
+        # Samplers use split-local indices. Replay reads use global frame indices.
+        if self.episodes:
+            self.episode_data_index = get_episode_data_index({
+                i: {'length': length}
+                for i, length in enumerate(self._episode_ends - self._episode_starts)
+            }, self.episodes)
+            self._frame_indices = np.concatenate([
+                np.arange(self._episode_starts[i], self._episode_ends[i], dtype=np.int64)
+                for i in self.episodes
+            ])
+        else:
+            self.episode_data_index = {
+                key: torch.empty(0, dtype=torch.long) for key in ("from", "to")
+            }
+            self._frame_indices = np.empty(0, dtype=np.int64)
+        self.length = len(self._frame_indices)
 
-        # Check timestamps
-        timestamps = np.array(self.replay_buffer['timestamp'])
-        episode_indices = np.array(self.replay_buffer['episode_index'])
-        # keep only timestamps and episode_indices for the selected episodes
-        if self.episodes is not None:
-            mask = np.isin(episode_indices, self.episodes)
-            timestamps = timestamps[mask]
-            episode_indices = episode_indices[mask]
+        # Check timestamps in the same episode order used by the sampler.
+        timestamps = np.asarray(self.replay_buffer['timestamp'])[self._frame_indices]
+        episode_indices = np.asarray(self.replay_buffer['episode_index'])[self._frame_indices]
         ep_data_index_np = {k: t.numpy() for k, t in self.episode_data_index.items()}
         check_timestamps_sync(timestamps, episode_indices, ep_data_index_np, self.fps, self.tolerance_s)
 
@@ -287,15 +290,15 @@ class AVAlohaDataset(torch.utils.data.Dataset):
             self.delta_indices = get_delta_indices(self.delta_timestamps, self.fps)
 
     def _get_query_indices(self, idx: int, ep_idx: int) -> tuple[dict[str, list[int | bool]]]:
-        ep_start = self.episode_data_index["from"][ep_idx]
-        ep_end = self.episode_data_index["to"][ep_idx]
+        ep_start = int(self._episode_starts[ep_idx])
+        ep_end = int(self._episode_ends[ep_idx])
         query_indices = {
-            key: [max(ep_start.item(), min(ep_end.item() - 1, idx + delta)) for delta in delta_idx]
+            key: [max(ep_start, min(ep_end - 1, idx + delta)) for delta in delta_idx]
             for key, delta_idx in self.delta_indices.items()
         }
         padding = {  # Pad values outside of current episode range
             f"{key}_is_pad": torch.BoolTensor(
-                [(idx + delta < ep_start.item()) | (idx + delta >= ep_end.item()) for delta in delta_idx]
+                [(idx + delta < ep_start) | (idx + delta >= ep_end) for delta in delta_idx]
             )
             for key, delta_idx in self.delta_indices.items()
         }
@@ -321,11 +324,11 @@ class AVAlohaDataset(torch.utils.data.Dataset):
 
     @property
     def num_frames(self) -> int:
-        return self.meta.num_frames
+        return self.length
 
     @property
     def num_episodes(self) -> int:
-        return self.meta.num_episodes
+        return len(self.episodes)
 
     @property
     def video_keys(self):
@@ -347,10 +350,11 @@ class AVAlohaDataset(torch.utils.data.Dataset):
         return self.num_frames
 
     def __getitem__(self, idx: int) -> dict[str, torch.Tensor]:
-        ep_idx = self.replay_buffer["episode_index"][idx]
+        frame_idx = int(self._frame_indices[idx])
+        ep_idx = self.replay_buffer["episode_index"][frame_idx]
         item = {"episode_index": torch.tensor(ep_idx)}
 
-        query_indices, padding = self._get_query_indices(idx, ep_idx)
+        query_indices, padding = self._get_query_indices(frame_idx, ep_idx)
         query_result = self._query_replay_buffer(query_indices)
         item = {**item, **padding}
         for key, val in query_result.items():

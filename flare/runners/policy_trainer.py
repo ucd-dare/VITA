@@ -105,6 +105,7 @@ class PolicyTrainer:
         self.network.eval()
         val_metrics = defaultdict(float)
         num_samples = 0
+        num_batches = 0
 
         with torch.no_grad():
             for batch_idx, batch in enumerate(self.val_dataloader):
@@ -118,6 +119,7 @@ class PolicyTrainer:
                 for k, v in output_dict.items():
                     val_metrics[k] += v * batch_size
                 num_samples += batch_size
+                num_batches += 1
 
                 if batch_idx == 0 and hasattr(self.network, 'visualize'):
                     viz_results = self.network.visualize(
@@ -133,6 +135,12 @@ class PolicyTrainer:
                         )
 
         val_metrics = {k: v / num_samples for k, v in val_metrics.items()}
+        if "time_per_chunk_ms" in val_metrics:
+            chunk_time_ms = val_metrics["time_per_chunk_ms"]
+            mean_batch_size = num_samples / num_batches
+            val_metrics["mean_batch_size"] = mean_batch_size
+            val_metrics["time_per_batch_ms"] = chunk_time_ms * mean_batch_size
+            val_metrics["chunks_per_sec"] = 1000 / chunk_time_ms
         return val_metrics
 
     def validate_online(self):

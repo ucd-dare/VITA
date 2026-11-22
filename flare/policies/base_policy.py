@@ -57,33 +57,33 @@ class BasePolicy(nn.Module, PyTorchModelHubMixin):
     def reset(self):
         self._action_queue = deque([], maxlen=self.action_horizon)
 
-    def validate(self, batch: dict[str, torch.Tensor]) -> tuple[torch.Tensor, dict[str, float]]:
+    def validate(self, batch: dict[str, torch.Tensor]) -> dict[str, float]:
         self.eval()
         batch = self.normalize_inputs(batch)
-        batch_size = batch[self.config.task.action_key].shape[0]
+        gt = batch[self.config.task.action_key]
+        batch_size = gt.shape[0]
 
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
+        if gt.is_cuda:
+            torch.cuda.synchronize(gt.device)
         t0 = time.perf_counter()
 
         with torch.no_grad():
             pred_norm = self.generate_actions(batch)
 
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
-        gen_time_ms = (time.perf_counter() - t0) * 1000 / batch_size # milliseconds
+        if gt.is_cuda:
+            torch.cuda.synchronize(gt.device)
+        chunk_time_ms = (time.perf_counter() - t0) * 1000 / batch_size
 
         pred = self.unnormalize_outputs({"action": pred_norm})["action"]
-        gt = batch[self.config.task.action_key]
 
         loss, metrics = self.compute_loss(batch)
 
         metrics["action_mse"] = F.mse_loss(pred, gt).item()
         metrics["loss"] = loss.item()
 
-        total_actions = batch_size * self.action_horizon
-        metrics["time_per_chunk_ms"] = gen_time_ms
-        metrics["time_per_action_ms"] = gen_time_ms / total_actions
-        metrics["chunks_per_sec"] = 1000 / gen_time_ms
+        # Each sample produces one chunk and executes action_horizon actions.
+        metrics["time_per_chunk_ms"] = chunk_time_ms
+        metrics["time_per_action_ms"] = chunk_time_ms / self.action_horizon
+        metrics["chunks_per_sec"] = 1000 / chunk_time_ms
 
         return metrics

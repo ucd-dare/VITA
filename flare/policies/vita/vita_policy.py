@@ -81,7 +81,7 @@ class VitaPolicy(BasePolicy):
 
         # Initialize flow network
         logger.info("Using MLP for flow velocity prediction.")
-        if config.policy.flow_net.name == "simple_flow_net":
+        if config.policy.flow_net.name in ("simple", "simple_flow_net"):
             FlowNet = SimpleFlowNet
         elif config.policy.flow_net.name == "simple_mean_flow_net":
             FlowNet = SimpleMeanFlowNet

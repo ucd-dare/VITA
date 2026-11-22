@@ -135,5 +135,7 @@ def create_dataloader(dataset, cfg: DictConfig, is_training=True):
         pin_memory=True,
         drop_last=False,
     )
+    if is_training and len(dataloader) == 0:
+        raise ValueError("No training batches remain after episode selection and frame dropping.")
     return dataloader
 
