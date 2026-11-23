@@ -65,14 +65,16 @@ function observationPoint(u, v) {
   ];
 }
 
-function sourcePoint(u, v, alignment) {
-  const source = observationPoint(u, v);
-  const target = actionPoint(u, v);
-  return [
-    mix(source[0], target[0], alignment),
-    mix(source[1], target[1] + 0.11, alignment),
-    mix(source[2], target[2] + 0.058, alignment),
-  ];
+function evolvingSurface(towardAction, deformation) {
+  return (u, v) => {
+    const vision = observationPoint(u, v);
+    const action = actionPoint(u, v);
+    return [
+      mix(vision[0], action[0], towardAction),
+      mix(vision[1], action[1], towardAction) + deformation * Math.sin(2.8 * u + 0.9 * v),
+      mix(vision[2], action[2], towardAction),
+    ];
+  };
 }
 
 function projectFrom(x, y, scale, yaw, pitch) {
@@ -197,7 +199,7 @@ function drawGaussian(context, project, particles, seconds, scale) {
   }
 }
 
-function drawPassage(context, sourceProject, targetProject, source, approach, seconds, scale, conditioned = false) {
+function drawPassage(context, sourceProject, targetProject, source, target, approach, seconds, scale, conditioned = false) {
   const identity = (point) => point;
   const sourceCenter = sourceProject([0, 0, 0]);
   const targetCenter = targetProject([0, 0, 0]);
@@ -215,7 +217,7 @@ function drawPassage(context, sourceProject, targetProject, source, approach, se
     const u = mix(-0.23, 0.65, (i * 3 % 8) / 7);
     const v = mix(-0.92, 0.92, fraction);
     const [startX, startY] = sourceProject(source(u, v, i));
-    const [endX, endY] = targetProject(actionPoint(u, v));
+    const [endX, endY] = targetProject(target(u, v));
     const phase = mix(-1.4, 1.4, fraction);
     const at = (t) => {
       const bend = Math.sin(t * Math.PI) * sweep;
@@ -365,16 +367,15 @@ export function createFlow(canvas, variant = 'vita') {
     context.lineCap = 'round';
 
     const approach = conventional ? 0 : ease((progress - 0.07) / 0.91);
-    const shape = ease((approach - 0.10) / 0.89);
     const startScale = Math.min(width * 0.156, height * 0.28);
     const finalScale = Math.min(width * 0.257, height * 0.303);
     const scale = mix(startScale, finalScale, approach);
     const yaw = -0.39 + 0.045 * Math.sin(seconds * 0.71);
     const pitch = 0.46 + 0.036 * Math.cos(seconds * 0.57);
-    const xSource = width * mix(conventional ? 0.239 : 0.244, 0.481, approach);
-    const xTarget = width * mix(0.743, 0.519, approach);
+    const xSource = width * mix(conventional ? 0.239 : 0.244, 0.486, approach);
+    const xTarget = width * mix(0.743, 0.514, approach);
     const ySource = height * mix(conventional ? 0.581 : 0.472, 0.484, approach);
-    const yTarget = height * mix(conventional ? 0.587 : 0.496, 0.535, approach);
+    const yTarget = height * mix(conventional ? 0.587 : 0.496, 0.525, approach);
     const sourceYaw = mix(yaw - (conventional ? 0 : 0.34), yaw, approach);
     const sourceProject = projectFrom(xSource, ySource, scale, sourceYaw, pitch);
     const targetProject = projectFrom(xTarget, yTarget, scale, yaw, pitch);
@@ -387,16 +388,20 @@ export function createFlow(canvas, variant = 'vita') {
 
     if (conventional) {
       const fromGaussianEdge = (_, v, i) => [0.27 + 0.07 * Math.cos(i * 3.1), v * 0.52, 0.29 * Math.sin(i * 2.13)];
-      const junction = drawPassage(context, sourceProject, targetProject, fromGaussianEdge, 0, seconds, scale, true);
+      const junction = drawPassage(context, sourceProject, targetProject, fromGaussianEdge, actionPoint, 0, seconds, scale, true);
       drawSurface(context, targetProject, actionPoint, copper, [229, 145, 101], scale, 1);
       drawGaussian(context, sourceProject, particles, seconds, scale);
       drawConditioning(context, width, height, seconds, junction);
       return;
     }
 
-    const currentSource = (u, v) => sourcePoint(u, v, shape);
-    drawPassage(context, sourceProject, targetProject, currentSource, approach, seconds, scale);
-    drawSurface(context, targetProject, actionPoint, copper, [229, 145, 101], scale, 0.98);
+    const shape = ease(progress);
+    const sharedActionWeight = 0.32;
+    const deformation = 0.24 * shape;
+    const currentSource = evolvingSurface(mix(0, sharedActionWeight, shape), deformation);
+    const currentTarget = evolvingSurface(mix(1, sharedActionWeight, shape), deformation);
+    drawPassage(context, sourceProject, targetProject, currentSource, currentTarget, approach, seconds, scale);
+    drawSurface(context, targetProject, currentTarget, copper, [229, 145, 101], scale, 0.98);
     drawSurface(context, sourceProject, currentSource, plum, [191, 145, 198], scale, 0.97);
   }
 
