@@ -190,8 +190,8 @@
                     <figure class="performance-metric">
                         <figcaption><h3>Fast inference</h3></figcaption>
                         <canvas id="inference-canvas" role="img" aria-label="Two bars compare inference time. VITA is shorter than conventional flow matching with conditioning."></canvas>
-                        <a class="performance-speed" href="https://arxiv.org/abs/2507.13231v4" target="_blank" rel="noreferrer" aria-label="1.5 to 2 times faster inference compared with conventional methods with conditioning modules. VITA paper.">
-                            <strong>1.5×–2×</strong> faster <svg aria-hidden="true"><use href="#external"/></svg>
+                        <a class="performance-speed" href="https://arxiv.org/abs/2507.13231v4" target="_blank" rel="noreferrer" aria-label="1.9 times faster inference compared with conventional methods with conditioning modules. VITA paper.">
+                            <strong>1.9×</strong> faster <svg aria-hidden="true"><use href="#external"/></svg>
                         </a>
                     </figure>
                     <figure class="performance-metric">
@@ -246,7 +246,7 @@
                             on 9 simulation and 5 real-world tasks from ALOHA and Robomimic.
                             Despite its simplicity, VITA outperforms or matches
                             state-of-the-art policies, while speeding up inference
-                            by 1.5x to 2.3x. To our knowledge, VITA is the first
+                            by 1.9x. To our knowledge, VITA is the first
                             <span class="highlight-bold">MLP-only flow matching policy capable of solving complex
                                 bi-manual manipulation tasks like those in ALOHA benchmarks.</span>
                         </p>
@@ -413,20 +413,26 @@ the need to transport from an unstructured Gaussian prior to a structured action
             <div class="columns is-centered has-text-centered">
                 <div class="column is-full-width">
                     <h2 class="title is-3">Efficiency</h2>
-                    <img src="static/images/efficiency.png" class="interpolation-image"
-                        alt="Efficiency comparison of VITA against baseline policies" />
+                    <img src="static/images/efficiency.png?v=bs1" class="interpolation-image"
+                        alt="Table 1. Inference latency (ms/chunk) on the RTX 4090 and A100 at batch size 1, and compute (GFLOPs/chunk), for vector- and grid-based policies." />
                     <br />
                     <br />
 
                     <div class="content has-text-justified">
                         <p>
-                            VITA can achieve
+                            At batch size 1, MLP-based VITA is <span class="highlight-bold">1.9×</span> faster on the RTX 4090
+                            and <span class="highlight-bold">2.5×</span> faster on the A100 than transformer-based FM with AdaLN.
+                            Grid-based VITA is <span class="highlight-bold">1.2×</span> and <span class="highlight-bold">1.3×</span> faster
+                            than transformer-based FM with cross-attention on the same GPUs, respectively.
+                        </p>
+                        <p>
+                            For batched inference at batch size 128, VITA can achieve
                             <span class="highlight-bold">4,500 chunks/s</span> throughput with
                             <span class="highlight-bold">0.22 ms/chunk</span> inference time on a single NVIDIA 4090.
                             Compared with conventional methods,
                             VITA reduces inference latency by approximately
-                            <span class="cool-keyword">50% to 130%</span>, and peak memory usage by
-                            <span class="cool-keyword">18% to 27%</span>.
+                            <span class="cool-keyword">33% to 51%</span>, and peak memory usage by
+                            <span class="cool-keyword">18.6% to 28.7%</span>.
                         </p>
                     </div>
                 </div>

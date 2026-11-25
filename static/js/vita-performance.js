@@ -77,9 +77,10 @@ function drawInference(context, frame) {
     context.setLineDash([]);
     stroke(context, t => [start, mix(top, bottom, t)], color(lavender, .38), scale);
 
+    const fmLength = .96;
     const bars = [
-        { y: .36, length: .57, from: color(gold, .94), to: color(rose, .91) },
-        { y: .64, length: .96, from: color(lavender, .66), to: color(lavender, .89) },
+        { y: .36, length: fmLength * (7.58 / 14.36), from: color(gold, .94), to: color(rose, .91) },
+        { y: .64, length: fmLength, from: color(lavender, .66), to: color(lavender, .89) },
     ];
 
     for (const { y, length, from, to } of bars) {
