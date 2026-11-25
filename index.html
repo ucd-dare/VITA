@@ -429,9 +429,9 @@ the need to transport from an unstructured Gaussian prior to a structured action
                             For batched inference at batch size 128, VITA can achieve
                             <span class="highlight-bold">4,500 chunks/s</span> throughput with
                             <span class="highlight-bold">0.22 ms/chunk</span> inference time on a single NVIDIA 4090.
-                            Compared with conventional methods,
-                            VITA reduces inference latency by approximately
-                            <span class="cool-keyword">33% to 51%</span>, and peak memory usage by
+                            MLP-based VITA achieves a <span class="cool-keyword">1.5×–2.3×</span> speedup
+                            over transformer-based FM with AdaLN or cross-attention.
+                            Compared with conventional methods, VITA reduces peak memory usage by
                             <span class="cool-keyword">18.6% to 28.7%</span>.
                         </p>
                     </div>
